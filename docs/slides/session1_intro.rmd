@@ -7,7 +7,7 @@ subtitle: "GIGA Doctoral Programme Workshop
   <hr color='#EB811B' size=1px width=796px>
 </html>"
 
-author: "Pau Palop-García and Felix Haass"
+author: "Pau Palop-Garcia and Felix Haass"
 date: ""
 output: 
   xaringan::moon_reader:
