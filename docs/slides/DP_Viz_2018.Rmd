@@ -1,0 +1,816 @@
+---
+title: 'Making your research accessible: Data Visualization and Interactive Graphics'
+author: "Palop and Haaﬂ"
+date: "15 Juni 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Session 1: Introduction
+
+### About me
+**Pau Palop-Garcia**  
+*GIGA Hamburg and Freie Universit‰t zu Berlin*
+
+pau.palop@giga-hamburg.de  
+
+**Research interests:** migration, political transnationalism, representation
+
+
+### About you
+* Introduce yourself
+* Name
+* Institution
+* Research interests
+* Motivation for the course
+
+
+### Course outline
+
+Time          | Topic
+------------- | -------------
+10.00-10.30   | Session 1: Introduction and main goals
+10.30-12.00   | Session 2: Basics for building an app
+12.00-13.00   | *Lunch break*
+13.00-14.00   | Session 3: Examples I - Scatter plots- 
+14.00-14.15   | *Coffee break*
+14.15-15.30   | Session 4: Examples II - Interactive maps-
+15.30-16.00   | Session 5: Deploying and sharing apps
+
+
+
+### What is an interactive visualization?
+Falta
+![Source: CC 2015 RStudio, Inc](figures/summary.png)
+
+Source: CC 2015, RStudio, Inc
+
+
+## Session 2: Basics for building an app
+
+
+### Main steps for building an app
+1.  Set main goal for the app
+2.  Install R Studio and necessary packages (e.g. shiny)
+3.  Select visualization
+4.  Prepare the data accordignly
+5.  Code the app
+6.  Deploy and share the app
+
+
+### Some basic examples I
+
+```{r example_basic_1,  echo=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput(inputId = "num", 
+              label = "Choose a number", 
+              value = 25, min = 1, max = 100), 
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+  output$hist <- renderPlot({
+    hist(rnorm(input$num))
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 500))
+```
+
+
+### Some basic examples II
+
+```{r example_basic_2,  echo=FALSE}
+library(shiny)
+
+ui <- pageWithSidebar(
+      headerPanel('Iris k-means clustering'),
+      sidebarPanel(
+        selectInput('xcol', 'X Variable', names(iris)),
+        selectInput('ycol', 'Y Variable', names(iris),
+                selected=names(iris)[[2]]),
+      numericInput('clusters', 'Cluster count', 3,
+                 min = 1, max = 9)
+    ),
+    mainPanel(
+      plotOutput('plot1')
+  )
+)
+
+
+
+server <- function(input, output, session) {
+
+  # Combine the selected variables into a new data frame
+  selectedData <- reactive({
+    iris[, c(input$xcol, input$ycol)]
+  })
+
+  clusters <- reactive({
+    kmeans(selectedData(), input$clusters)
+  })
+
+  output$plot1 <- renderPlot({
+    palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+      "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
+
+    par(mar = c(5.1, 4.1, 0, 1))
+    plot(selectedData(),
+         col = clusters()$cluster,
+         pch = 20, cex = 3)
+    points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
+  })
+
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 500))
+```
+
+Source: https://shiny.rstudio.com/gallery/kmeans-example.html
+
+
+### Some basic examples II
+
+```{r example_basic_3,  echo=FALSE}
+library(shiny)
+library(datasets)
+
+
+# Use a fluid Bootstrap layout
+ui <- fluidPage(    
+  
+  # Give the page a title
+  titlePanel("Telephones by region"),
+  
+  # Generate a row with a sidebar
+  sidebarLayout(      
+    
+    # Define the sidebar with one input
+    sidebarPanel(
+      selectInput("region", "Region:", 
+                  choices=colnames(WorldPhones)),
+      hr(),
+      helpText("Data from AT&T (1961) The World's Telephones.")
+    ),
+    
+    # Create a spot for the barplot
+    mainPanel(
+      plotOutput("phonePlot")  
+    )
+    
+  )
+)
+
+server <- 
+
+# Define a server for the Shiny app
+function(input, output) {
+  
+  # Fill in the spot we created for a plot
+  output$phonePlot <- renderPlot({
+    
+    # Render a barplot
+    barplot(WorldPhones[,input$region]*1000, 
+            main=input$region,
+            ylab="Number of Telephones",
+            xlab="Year")
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 500))
+
+```
+
+
+Source: https://shiny.rstudio.com/gallery/telephones-by-region.html  
+
+### Preparing the data
+* Depends on the app
+* General rule: keep it simple
+
+
+### Structure of a ShinyApp
+
+* **A usser interface (ui):** controls the app layout
+* **A server function (server):** contains all the functions needed to build the app
+* **A call to the shinyApp function:** creates a shiny app that pairs ui and server
+
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/summary.png)
+
+
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step1.png)
+
+
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step2.png)
+
+
+
+### Widgets
+* **Definition:** a web element that users can interact with
+* A way for users to send messages to the Shiny app
+* Widgets are R functions: they required at least two elements to work: a name and a label
+
+
+### Widgets gallery
+
+![Source: CC 2015 RStudio, Inc](figures/buttons_shiny.png)
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step3.png)
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step4.png)
+
+Source: CC 2015, RStudio, Inc
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step5.png)
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step6.png)
+
+### Reactive outputs
+
+**Reactive outputs respond when users toggles a widget**  
+Two main steps:
+* Add an R object to the user interface
+* Tell shiny how to build the object in the server function
+
+
+### Building the simplest app
+
+![Source: CC 2015 RStudio, Inc](figures/step7.png)
+
+## Session 3: First examples - Scatter plots - 
+
+We will use as a baseline the plot that we created in Session 2 of Day 1. Remmember?
+```{r scatter, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder) 
+library(tidyverse) 
+
+example_plot <- ggplot(data = gapminder, 
+                       # the aes() function defines aesthetics
+                       aes(x = year,  # x axis
+                           y = lifeExp, # y axis
+                           color = continent, # map color to continent
+                           size = gdpPercap)) + # map the aesthetic 'size' to gdp/pc
+  geom_point() 
+
+```
+
+
+## ... We can make it interactive
+
+```{r scatter_2, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("continent", "Select continent", 
+              choices = list("Africa", "Americas", "Asia", "Europe", "Oceania")), 
+  plotOutput("gpoint")
+)
+  
+  
+server <- function(input, output) {
+  output$gpoint <- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent, select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic 'size' to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 500))
+
+
+
+```
+
+
+## ... Let's make it a bit more complicated
+
+```{r scatter_3, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui <- fluidPage(
+  checkboxGroupInput("continent", "Select continent", 
+              choices = list("Africa", "Americas", "Asia", "Europe", "Oceania"), 
+              selected = "Africa"), 
+  plotOutput("gpoint")
+)
+
+
+server <- function(input, output) {
+  output$gpoint <- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent, select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic 'size' to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 600))
+
+
+```
+
+
+## ... And even a bit more
+
+```{r scatter_4, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui <- fluidPage(
+  checkboxGroupInput("continent", "Select continent", 
+                     choices = list("Africa", "Americas", "Asia", "Europe", "Oceania"), 
+                     selected = "Africa"),
+  
+  sliderInput("slider", label = h3("GDP per capita"), min = 240, 
+              max = 113600, value = 250), 
+  
+  plotOutput("gpoint")
+)
+
+
+server <- function(input, output) {
+  output$gpoint <- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent & 
+                           gdpPercap < input$slider , select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic 'size' to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))
+
+
+```
+
+
+## ... Let's add a sidebar to make it look nicer!
+
+```{r scatter_5, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui <- pageWithSidebar(
+  headerPanel("Options"), 
+  sidebarPanel(
+    checkboxGroupInput("continent", "Select continent", 
+                       choices = list("Africa", "Americas", "Asia", "Europe", "Oceania"), 
+                       selected = "Africa"),
+    
+    sliderInput("slider", label = h3("GDP per capita"), min = 240, 
+                max = 113600, value = 250)
+    ),
+  
+  mainPanel(
+    plotOutput("gpoint")
+  )
+)
+
+
+server <- function(input, output) {
+  output$gpoint <- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent & 
+                           gdpPercap < input$slider , select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic 'size' to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 550))
+
+
+```
+
+
+### Exercise 1  
+
+Plot an interactive version of the life expectancy in African countries graph using the gapminder data and the static plot developed in Session 2 of Day 1. The interaction should allow users to select the country that they want to highlight. Some tips:  
+
+- Which part of the static code should be reactive?
+- Which widget/s could be used to create the interaction?
+- Create a list of African countries and use it as "choice" in the widget parameters
+- Add a *sidebarPanel* and a *mainPanel* to the vizualization
+
+
+### Solution: code for static figure
+
+```{r line_1, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(gapminder)
+library(tidyverse)
+
+gapminder_africa <- gapminder %>% 
+  # filter only African countries
+  filter(continent == "Africa") %>% 
+  # create a categorical variable that distinguishes
+  # between Rwanda and other African countries
+  mutate(color_plot = ifelse(country != "Rwanda", # != = "!" + "="
+                             "Other African Countries", 
+                             "Rwanda"))
+
+
+rwanda_plot <- ggplot(gapminder_africa, 
+                      aes(x = year, 
+                          y = lifeExp, 
+                          group = country, 
+                          color = color_plot)) + 
+  geom_line(aes(alpha = color_plot)) + 
+  scale_alpha_discrete("", range = c(0.5, 1)) +  
+  scale_color_manual("", values = c("lightgrey", "black")) + 
+  
+  # add theme
+  theme_bw() + # black and white theme
+  theme(legend.position = "bottom", # legend position
+        panel.grid = element_blank()) # remove grid lines
+
+print(rwanda_plot)
+
+
+
+```
+
+
+### Solution: Create interaction
+
+```{r line_2, echo=TRUE, message=FALSE, warning=FALSE}
+library(gapminder)
+library(tidyverse)
+library(shiny)
+
+gapminder_africa <- gapminder %>% 
+  # filter only African countries
+  filter(continent == "Africa") %>% 
+  # create a categorical variable that distinguishes
+  # between Rwanda and other African countries
+  mutate(color_plot = ifelse(country != "Rwanda", # != = "!" + "="
+                             "Other African Countries", 
+                             "Rwanda"))
+
+africa_list <- levels(factor(gapminder_africa$country)) # create a list with African countries
+
+ui <- pageWithSidebar(
+  headerPanel("Options"), 
+  sidebarPanel(
+    selectInput("country2", "Select country", 
+                       choices = africa_list, # Use list of african countries as choices
+                       selected = "Algeria") # Select Algeria
+  ),
+  
+  mainPanel(
+    plotOutput("gline")
+  )
+)
+
+
+server <- function(input, output) {
+  output$gline <- renderPlot({
+    gapminder_africa <- gapminder %>% 
+      # filter only African countries
+      filter(continent == "Africa") %>% 
+      # create a categorical variable that distinguishes
+      # between Rwanda and other African countries
+      mutate(color_plot = ifelse(country != input$country2, # != = "!" + "="
+                                 "Others", 
+                                 "Selected country"))
+    
+    
+    
+      plot <- ggplot(gapminder_africa, 
+                          aes(x = year, 
+                              y = lifeExp, 
+                              group = country, 
+                              color = color_plot)) + 
+      geom_line(aes(alpha = color_plot)) + 
+      scale_alpha_discrete("", range = c(0.5, 1)) +  
+      scale_color_manual("", values = c("lightgrey", "black")) + 
+      
+      # add theme
+      theme_bw() + # black and white theme
+      theme(legend.position = "bottom", # legend position
+            panel.grid = element_blank()) # remove grid lines
+    
+    print(plot)
+  })
+}
+
+
+shinyApp(ui = ui, server = server, options = list(height = 600))
+
+
+```
+
+## Session 4: Basic interactive maps
+
+```{r map_1, echo=TRUE, message=FALSE, warning=FALSE}
+library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+world <- readShapeSpatial("./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+world$continent <- countrycode(world$ISO3, 
+                               "iso3c", # input format
+                               "continent") # output format
+
+africa <- subset(world, continent == "Africa")
+
+# fortify: bring dataset into shape that ggplot can understand
+africa_fort <- fortify(africa, # we use the "africa" shapefile from previous slide
+                       region = "ISO3") # this becomes "id" in the fortified dataset
+
+
+# get gapminder data 
+data("gapminder")
+
+# create country identifier for merging
+gapminder$ISO3 <- countrycode(gapminder$country, "country.name", "iso3c")
+
+#only year 2007
+gapminder2007 <- gapminder[gapminder$year == 2007, ]
+
+# join in gapminder data
+africa_fort <- left_join(africa_fort, 
+                         gapminder2007, 
+                         by = c("id" = "ISO3"))
+
+
+africa_map <- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, 
+                group = group),
+            color = "black")  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) +
+  
+  # appearance
+  labs(title = "Life Expectancy in Africa, 2007\n", 
+       subtitle = "Data: Gapminder\n") +
+  scale_fill_distiller("Life Expectancy", 
+                       palette = "RdYlGn", 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), 
+        legend.position = "bottom",
+        legend.text.align = 0) 
+
+plot(africa_map)
+
+```
+
+
+### Creating an interactive map
+
+
+```{r map_2, echo=TRUE, message=FALSE, warning=FALSE}
+library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+ui <- fluidPage(
+  radioButtons("variable", "Select variable", 
+                     choices = list("lifeExp", "pop", "gdpPercap"), 
+               selected = "lifeExp"),
+
+  plotOutput("gmap")
+)
+
+
+server <- function(input, output) {
+  output$gmap <- renderPlot({
+    world <- readShapeSpatial("C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp")
+    
+    world$continent <- countrycode(world$ISO3, 
+                                   "iso3c", # input format
+                                   "continent") # output format
+    
+    africa <- subset(world, continent == "Africa")
+    
+    # fortify: bring dataset into shape that ggplot can understand
+    africa_fort <- fortify(africa, # we use the "africa" shapefile from previous slide
+                           region = "ISO3") # this becomes "id" in the fortified dataset
+    
+    
+    # get gapminder data 
+    data("gapminder")
+    
+    # create country identifier for merging
+    gapminder$ISO3 <- countrycode(gapminder$country, "country.name", "iso3c")
+    
+    #only year 2007
+    gapminder2007 <- gapminder[gapminder$year == 2007, ]
+    
+    # join in gapminder data
+    africa_fort <- left_join(africa_fort, 
+                             gapminder2007, 
+                             by = c("id" = "ISO3"))
+    
+    #Create reactive variable
+    africa_fort$var <- africa_fort[,input$variable]
+    
+    africa_map <- ggplot() +
+      geom_path(data = africa_fort,
+                aes(x = long, y = lat, 
+                    group = group),
+                color = "black")  +
+      geom_map(data = africa_fort,
+               aes(map_id = id,
+                   fill = var),
+               map = africa_fort) +
+      
+      # appearance
+      labs(title = "", 
+           subtitle = "") +
+      scale_fill_distiller("", 
+                           palette = "RdYlGn", 
+                           direction = 1) +
+      coord_equal() +
+      theme_void() +  
+      theme(panel.grid = element_blank(), 
+            legend.position = "bottom",
+            legend.text.align = 0) 
+    
+    plot(africa_map)
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))
+
+```
+
+
+### Exercise 2
+Plot an interactive vizualization in which not only the user can select the variable AND the year that should be plotted. The app layout should include also a sidebar and a mainpanel. Steps:
+
+1.  Create a ui with a sidebar and a mainpanel
+2. Create two widgets in the ui (one for the variable and one for the years)  
+3.  Create a reactive expression to subset the data: (1) select year and (2) select variable
+4.  Create map in server
+5.  Call shiny fuction
+
+
+### Solution
+
+```{r map_3, echo=TRUE, message=FALSE, warning=FALSE}
+ui <- pageWithSidebar(
+  headerPanel("Select options"),
+  sidebarPanel(
+    radioButtons("variable", "Select variable", 
+                 choices = list("Life expectancy" = "lifeExp", "Population" = "pop", 
+                                "GDP per capita" = "gdpPercap"), 
+                 selected = "lifeExp"),
+    radioButtons("year", label = "Select year",
+                 choices = list("1952", "1957", "1962", "1967", 
+                                "1972", "1977", "1982", "1987",
+                                "1992", "1997", "2002", "2007"), 
+                 selected = "1952")
+  ),
+  mainPanel(
+    plotOutput("gmap")
+  )
+)
+
+
+
+server <- function(input, output) {
+  output$gmap <- renderPlot({
+    world <- readShapeSpatial("C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp")
+    
+    world$continent <- countrycode(world$ISO3, 
+                                   "iso3c", # input format
+                                   "continent") # output format
+    
+    africa <- subset(world, continent == "Africa")
+    
+    # fortify: bring dataset into shape that ggplot can understand
+    africa_fort <- fortify(africa, # we use the "africa" shapefile from previous slide
+                           region = "ISO3") # this becomes "id" in the fortified dataset
+    
+    
+    # get gapminder data 
+    data("gapminder")
+    
+    # create country identifier for merging
+    gapminder$ISO3 <- countrycode(gapminder$country, "country.name", "iso3c")
+    
+    #only year
+    gapminder_year <- gapminder[gapminder$year == input$year, ]
+    
+    # join in gapminder data
+    africa_fort <- left_join(africa_fort, 
+                             gapminder_year, 
+                             by = c("id" = "ISO3"))
+    
+    #Create reactive variable
+    africa_fort$var <- africa_fort[,input$variable]
+    
+    africa_map <- ggplot() +
+      geom_path(data = africa_fort,
+                aes(x = long, y = lat, 
+                    group = group),
+                color = "gray")  +
+      geom_map(data = africa_fort,
+               aes(map_id = id,
+                   fill = var),
+               map = africa_fort) +
+      
+      # appearance
+      labs(title = "", 
+           subtitle = "") +
+      scale_fill_distiller("", 
+                           palette = "RdYlGn", 
+                           direction = 1) +
+      coord_equal() +
+      theme_void() +  
+      theme(panel.grid = element_blank(), 
+            legend.position = "bottom",
+            legend.text.align = 0) 
+    
+    plot(africa_map)
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))
+
+```
+
+
+## Session 5: Deploying and sharing apps
+
+### Main steps for building an app
+1.  Set main goal for the app
+2.  Install R Studio and necessary packages (e.g. shiny)
+3.  Select visualization
+4.  Prepare the data accordignly
+5.  Code the app
+**6.  Deploy and share the app**
+
+###  Deploying and sharing the app
+Every shiny app is maintained by a computer running R  
+How to save it:  
+
+* app.R
+* datasets, images, css, helper scripts, etc. 
+
+###  Deploying and sharing the app
+Using shinyapps.io:
+
+* Free
+* Secure
+* Scalable
+
+### Sharing in your website via iframe
+![GIGA 2018](figures/gigawebsite.png)
+
+### Other sharing options
+* R Markdown
+* R Shiny presentations
+
+## Thanks!

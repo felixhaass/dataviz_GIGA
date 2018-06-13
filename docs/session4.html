@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Session 4: Maps</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making your research accessible</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="software.html">
+    <span class="fa fa-laptop"></span>
+     
+    Required Software and Installation Instructions
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="session1.html">Session 1: Intro, R Refresher, and Code Organization</a>
+    </li>
+    <li>
+      <a href="session2.html">Session 2: ggplot2</a>
+    </li>
+    <li>
+      <a href="session3.html">Session 3: Facets and small multiples</a>
+    </li>
+    <li>
+      <a href="session4.html">Session 4: Maps</a>
+    </li>
+    <li>
+      <a href="session5.html">Session 5: General Tips and Next Steps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sessions_day2.html">All sessions</a>
+    </li>
+    <li>
+      <a href="Visualizations_R_Palop_2018.pdf">Slides Session 1</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-list"></span>
+     
+    Data
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="help.html">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Session 4: Maps</h1>
+
+</div>
+
+
+<div id="slides" class="section level1">
+<h1>Slides</h1>
+<ul>
+<li><a href="./slides/session4_maps.html">HTML</a></li>
+</ul>
+<hr />
+</div>
+<div id="maps" class="section level1">
+<h1>Maps</h1>
+<ul>
+<li>Useful to visualize <strong>spatial</strong> data</li>
+<li>Again, think of comparisons, but in space!</li>
+<li>Goal of this session:</li>
+<li>Find maps online</li>
+<li>Combine spatial data with other information (GDP etc.)</li>
+<li>Plot maps with ggplot2</li>
+</ul>
+<p><em>Note:</em> Complex topic, very brief overview only, if you would like to know more, let me know and we organize a separate course!</p>
+<hr />
+</div>
+<div id="example" class="section level1">
+<h1>Example</h1>
+<p><img src="session4_files/figure-html/unnamed-chunk-2-1.png" width="110%" height="110%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="where-to-get-maps-and-spatial-data" class="section level1">
+<h1>Where to get maps and spatial data?</h1>
+<ul>
+<li>Each map comes in a specific spatial format, the so-called “shapefile”</li>
+<li>Country shapefiles and subnational data can be obtained at <a href="http://gadm.org" class="uri">http://gadm.org</a></li>
+<li>Useful for single country shapes</li>
+<li>Lower-level administrative units</li>
+<li>Read the downloaded file with <code>country_map &lt;- readRDS(&quot;path_to_file&quot;)</code></li>
+</ul>
+<p>Many other sources of spatial data</p>
+<ul>
+<li>Conflict data</li>
+<li>Uppsala Conflict Data Program GED <a href="http://ucdp.uu.se/downloads/" class="uri">http://ucdp.uu.se/downloads/</a></li>
+</ul>
+<p>Generate your own!</p>
+<ul>
+<li>Measure location of interviews with a GPS device</li>
+</ul>
+<hr />
+</div>
+<div id="read-spatial-data-in-r" class="section level1">
+<h1>Read spatial data in R</h1>
+<p>Note: you can find the world shapefile on the course website!</p>
+<pre class="r"><code>library(maptools)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+plot(world)</code></pre>
+<p><img src="session4_files/figure-html/unnamed-chunk-3-1.png" width="110%" height="110%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="manipulate-and-view-spatial-data" class="section level1">
+<h1>Manipulate and view spatial data</h1>
+<p>The <code>world</code> object from the previous slide is a special kind of data frame, a <code>SpatialDataFrame</code>. It works like most other data frames, but has a few quirks.</p>
+<p><strong>Manipulating SpatialDataFrames</strong>: <code>countrycode()</code></p>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               &quot;iso3c&quot;, # input format
+                               &quot;continent&quot;) # output format
+
+table(world$continent)</code></pre>
+<pre><code>## 
+##   Africa Americas     Asia   Europe  Oceania 
+##       57       53       50       51       25</code></pre>
+<hr />
+</div>
+<div id="manipulate-and-view-spatial-data-1" class="section level1">
+<h1>Manipulate and view spatial data</h1>
+<p><strong>Manipulating SpatialDataFrames</strong>: <code>subset()</code></p>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               &quot;iso3c&quot;, # input format
+                               &quot;continent&quot;) # output format
+
+africa &lt;- subset(world, continent == &quot;Africa&quot;)
+
+par(mar=c(0.1, 0.1, 0.1, 0.1))
+plot(africa)</code></pre>
+<p><img src="session4_files/figure-html/unnamed-chunk-5-1.png" width="150" height="150" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="manipulate-and-view-spatial-data-2" class="section level1">
+<h1>Manipulate and view spatial data</h1>
+<p><strong>Manipulating SpatialDataFrames</strong>: <code>View()</code></p>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               &quot;iso3c&quot;, # input format
+                               &quot;continent&quot;) # output format
+
+
+View(world@data) # note the &#39;@&#39; as compared to other data frames</code></pre>
+<hr />
+</div>
+<div id="merge-in-other-data-i" class="section level1">
+<h1>Merge in other data I</h1>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+# create continent identifier
+world$continent &lt;- countrycode(world$ISO3, 
+                               &quot;iso3c&quot;, # input format
+                               &quot;continent&quot;) # output format
+
+# subset Africa shape file
+africa &lt;- subset(world, continent == &quot;Africa&quot;)</code></pre>
+<hr />
+</div>
+<div id="merge-in-other-data-ii" class="section level1">
+<h1>Merge in other data II</h1>
+<p>…continued from previous slide.</p>
+<pre class="r"><code># get gapminder data 
+data(&quot;gapminder&quot;)
+
+# create country identifier for merging
+gapminder$ISO3 &lt;- countrycode(gapminder$country, &quot;country.name&quot;, &quot;iso3c&quot;)
+
+# only year 2007
+gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
+
+# fortify: bring dataset into shape that ggplot can understand
+africa_fort &lt;- fortify(africa, # we use the &quot;africa&quot; shapefile from previous slide
+                       region = &quot;ISO3&quot;) # this becomes &quot;id&quot; in the fortified dataset
+
+# join in gapminder data
+africa_fort &lt;- left_join(africa_fort, 
+                         gapminder2007, 
+                         by = c(&quot;id&quot; = &quot;ISO3&quot;))</code></pre>
+<hr />
+</div>
+<div id="plot-the-map" class="section level1">
+<h1>Plot the map!</h1>
+<pre class="r"><code>africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, group = group),
+            color = &quot;black&quot;) 
+
+plot(africa_map)</code></pre>
+<p><img src="session4_files/figure-html/unnamed-chunk-9-1.png" width="90%" height="90%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="plot-the-map-continued" class="section level1">
+<h1>Plot the map! (continued)</h1>
+<pre class="r"><code>africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, group = group),
+            color = &quot;black&quot;)  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) 
+
+plot(africa_map)</code></pre>
+<p><img src="session4_files/figure-html/unnamed-chunk-10-1.png" width="90%" height="90%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="plot-the-map-continued-1" class="section level1">
+<h1>Plot the map! (continued)</h1>
+<pre class="r"><code>africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, 
+                group = group),
+            color = &quot;black&quot;)  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) +
+  
+  # appearance
+  labs(title = &quot;Life Expectancy in Africa, 2007\n&quot;, 
+       subtitle = &quot;Data: Gapminder\n&quot;) +
+  scale_fill_distiller(&quot;Life Expectancy&quot;, 
+                       palette = &quot;RdYlGn&quot;, 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), 
+        legend.position = &quot;bottom&quot;,
+        legend.text.align = 0) </code></pre>
+<hr />
+</div>
+<div id="plot-the-map-continued-2" class="section level1">
+<h1>Plot the map! (continued)</h1>
+<p><img src="session4_files/figure-html/unnamed-chunk-12-1.png" width="85%" height="85%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="exercise" class="section level1">
+<h1>Exercise</h1>
+<p>Build a map of</p>
+<ul>
+<li><p>Latin America (hint: countrycode has only “Americas” as continent. How would you filter the world shapefile to leave out the US and Canada?)</p></li>
+<li><p>Merge in information on GDP per capita in 2007</p></li>
+<li><p>Plot the map</p></li>
+<li>For the fast ones:</li>
+<li>Read up on the World Development Indicators R package <code>install.packages(WDI)</code>.</li>
+<li>Use the package to download data on the indicator <code>DT.ODA.ODAT.GN.ZS</code> (net development assistance received as percent of GNI) in the year 2015 and download it in a separate data frame</li>
+<li><p>Merge the data frame into the <code>africa</code> shapefile and generate a map of Aid/GNI for africa</p></li>
+</ul>
+<hr />
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<pre class="r"><code>library(maptools)
+library(sp)
+library(countrycode)
+library(gapminder)
+library(tidyverse)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+world$continent &lt;- countrycode(world$ISO2, &quot;iso2c&quot;, &quot;continent&quot;)
+
+latam &lt;- subset(world, continent == &quot;Americas&quot;)
+
+# remove US and Canada and Greenland
+latam &lt;- subset(latam, NAME != &quot;United States&quot; &amp; 
+                  NAME != &quot;Canada&quot; &amp; 
+                  NAME != &quot;Greenland&quot;)
+
+# get gapminder data 
+data(&quot;gapminder&quot;)
+
+gapminder$ISO3 &lt;- countrycode(gapminder$country, &quot;country.name&quot;, &quot;iso3c&quot;)
+
+gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]</code></pre>
+<hr />
+</div>
+<div id="solution-ii" class="section level1">
+<h1>Solution II</h1>
+<pre class="r"><code># Prepare and Merge Data
+
+latam_fort &lt;- fortify(latam, region = &quot;ISO3&quot;)
+latam_fort &lt;- left_join(latam_fort, 
+                         gapminder2007,
+                         by = c(&quot;id&quot; = &quot;ISO3&quot;))
+# plot
+latam_map &lt;- ggplot() +
+  geom_map(data = latam_fort, 
+           aes(map_id = id, fill = gdpPercap), 
+           map = latam_fort) + 
+  geom_path(data = latam_fort, 
+            aes(x = long, y = lat, group = group), 
+            color = &quot;black&quot;) + 
+  labs(title = &quot;GDP per capita in Latin America 2007\n&quot;, 
+       subtitle = &quot;Data: Gapminder\n&quot;) +
+  scale_fill_distiller(&quot;GDP per capita&quot;, 
+                       palette = &quot;RdYlGn&quot;, 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), legend.position = &quot;bottom&quot;,
+        legend.text.align = 0) </code></pre>
+<hr />
+</div>
+<div id="solution-iii" class="section level1">
+<h1>Solution III</h1>
+<p><img src="session4_files/figure-html/unnamed-chunk-15-1.png" width="60%" height="60%" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

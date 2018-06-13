@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Sessions Day 2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making your research accessible</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="software.html">
+    <span class="fa fa-laptop"></span>
+     
+    Required Software and Installation Instructions
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="session1.html">Session 1: Intro, R Refresher, and Code Organization</a>
+    </li>
+    <li>
+      <a href="session2.html">Session 2: ggplot2</a>
+    </li>
+    <li>
+      <a href="session3.html">Session 3: Facets and small multiples</a>
+    </li>
+    <li>
+      <a href="session4.html">Session 4: Maps</a>
+    </li>
+    <li>
+      <a href="session5.html">Session 5: General Tips and Next Steps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sessions_day2.html">All sessions</a>
+    </li>
+    <li>
+      <a href="Visualizations_R_Palop_2018.pdf">Slides Session 1</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-list"></span>
+     
+    Data
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="help.html">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Sessions Day 2</h1>
+
+</div>
+
+
+<div id="session-1-introduction" class="section level2">
+<h2>Session 1: Introduction</h2>
+<div id="about-me" class="section level3">
+<h3>About me</h3>
+<p><strong>Pau Palop-Garcia</strong><br />
+<em>GIGA Hamburg and Freie Universität zu Berlin</em></p>
+<p><a href="mailto:pau.palop@giga-hamburg.de">pau.palop@giga-hamburg.de</a></p>
+<p><strong>Research interests:</strong> migration, political transnationalism, representation</p>
+</div>
+<div id="about-you" class="section level3">
+<h3>About you</h3>
+<ul>
+<li>Introduce yourself</li>
+<li>Name</li>
+<li>Institution</li>
+<li>Research interests</li>
+<li>Motivation for the course</li>
+</ul>
+</div>
+<div id="course-outline" class="section level3">
+<h3>Course outline</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10.00-10.30</td>
+<td>Session 1: Introduction and main goals</td>
+</tr>
+<tr class="even">
+<td>10.30-12.00</td>
+<td>Session 2: Basics for building an app</td>
+</tr>
+<tr class="odd">
+<td>12.00-13.00</td>
+<td><em>Lunch break</em></td>
+</tr>
+<tr class="even">
+<td>13.00-14.00</td>
+<td>Session 3: Examples I - Scatter plots-</td>
+</tr>
+<tr class="odd">
+<td>14.00-14.15</td>
+<td><em>Coffee break</em></td>
+</tr>
+<tr class="even">
+<td>14.15-15.30</td>
+<td>Session 4: Examples II - Interactive maps-</td>
+</tr>
+<tr class="odd">
+<td>15.30-16.00</td>
+<td>Session 5: Deploying and sharing apps</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="what-is-an-interactive-visualization" class="section level3">
+<h3>What is an interactive visualization?</h3>
+<p>Falta <img src="figures/summary.png" alt="Source: CC 2015 RStudio, Inc" /></p>
+<p>Source: CC 2015, RStudio, Inc</p>
+</div>
+</div>
+<div id="session-2-basics-for-building-an-app" class="section level2">
+<h2>Session 2: Basics for building an app</h2>
+<div id="main-steps-for-building-an-app" class="section level3">
+<h3>Main steps for building an app</h3>
+<ol style="list-style-type: decimal">
+<li>Set main goal for the app</li>
+<li>Install R Studio and necessary packages (e.g. shiny)</li>
+<li>Select visualization</li>
+<li>Prepare the data accordignly</li>
+<li>Code the app</li>
+<li>Deploy and share the app</li>
+</ol>
+</div>
+<div id="some-basic-examples-i" class="section level3">
+<h3>Some basic examples I</h3>
+<pre><code>## Warning: package &#39;shiny&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## PhantomJS not found. You can install it with webshot::install_phantomjs(). If it is installed, please make sure the phantomjs executable can be found via the PATH variable.</code></pre>
+<div style="width: 100% ; height: 500px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+<div id="some-basic-examples-ii" class="section level3">
+<h3>Some basic examples II</h3>
+<div style="width: 100% ; height: 500px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<p>Source: <a href="https://shiny.rstudio.com/gallery/kmeans-example.html" class="uri">https://shiny.rstudio.com/gallery/kmeans-example.html</a></p>
+</div>
+<div id="some-basic-examples-ii-1" class="section level3">
+<h3>Some basic examples II</h3>
+<div style="width: 100% ; height: 500px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<p>Source: <a href="https://shiny.rstudio.com/gallery/telephones-by-region.html" class="uri">https://shiny.rstudio.com/gallery/telephones-by-region.html</a></p>
+</div>
+<div id="preparing-the-data" class="section level3">
+<h3>Preparing the data</h3>
+<ul>
+<li>Depends on the app</li>
+<li>General rule: keep it simple</li>
+</ul>
+</div>
+<div id="structure-of-a-shinyapp" class="section level3">
+<h3>Structure of a ShinyApp</h3>
+<ul>
+<li><strong>A usser interface (ui):</strong> controls the app layout</li>
+<li><strong>A server function (server):</strong> contains all the functions needed to build the app</li>
+<li><strong>A call to the shinyApp function:</strong> creates a shiny app that pairs ui and server</li>
+</ul>
+</div>
+<div id="building-the-simplest-app" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/summary.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="building-the-simplest-app-1" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step1.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="building-the-simplest-app-2" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step2.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="widgets" class="section level3">
+<h3>Widgets</h3>
+<ul>
+<li><strong>Definition:</strong> a web element that users can interact with</li>
+<li>A way for users to send messages to the Shiny app</li>
+<li>Widgets are R functions: they required at least two elements to work: a name and a label</li>
+</ul>
+</div>
+<div id="widgets-gallery" class="section level3">
+<h3>Widgets gallery</h3>
+<div class="figure">
+<img src="figures/buttons_shiny.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="building-the-simplest-app-3" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step3.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="building-the-simplest-app-4" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step4.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+<p>Source: CC 2015, RStudio, Inc</p>
+</div>
+<div id="building-the-simplest-app-5" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step5.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="building-the-simplest-app-6" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step6.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+<div id="reactive-outputs" class="section level3">
+<h3>Reactive outputs</h3>
+<p><strong>Reactive outputs respond when users toggles a widget</strong><br />
+Two main steps: * Add an R object to the user interface * Tell shiny how to build the object in the server function</p>
+</div>
+<div id="building-the-simplest-app-7" class="section level3">
+<h3>Building the simplest app</h3>
+<div class="figure">
+<img src="figures/step7.png" alt="Source: CC 2015 RStudio, Inc" />
+<p class="caption">Source: CC 2015 RStudio, Inc</p>
+</div>
+</div>
+</div>
+<div id="session-3-first-examples---scatter-plots--" class="section level2">
+<h2>Session 3: First examples - Scatter plots -</h2>
+<p>We will use as a baseline the plot that we created in Session 2 of Day 1. Remmember?</p>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       # the aes() function defines aesthetics
+                       aes(x = year,  # x axis
+                           y = lifeExp, # y axis
+                           color = continent, # map color to continent
+                           size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+  geom_point() </code></pre>
+</div>
+<div id="we-can-make-it-interactive" class="section level2">
+<h2>… We can make it interactive</h2>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui &lt;- fluidPage(
+  selectInput(&quot;continent&quot;, &quot;Select continent&quot;, 
+              choices = list(&quot;Africa&quot;, &quot;Americas&quot;, &quot;Asia&quot;, &quot;Europe&quot;, &quot;Oceania&quot;)), 
+  plotOutput(&quot;gpoint&quot;)
+)
+  
+  
+server &lt;- function(input, output) {
+  output$gpoint &lt;- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent, select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 500))</code></pre>
+<div style="width: 100% ; height: 500px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+<div id="lets-make-it-a-bit-more-complicated" class="section level2">
+<h2>… Let’s make it a bit more complicated</h2>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui &lt;- fluidPage(
+  checkboxGroupInput(&quot;continent&quot;, &quot;Select continent&quot;, 
+              choices = list(&quot;Africa&quot;, &quot;Americas&quot;, &quot;Asia&quot;, &quot;Europe&quot;, &quot;Oceania&quot;), 
+              selected = &quot;Africa&quot;), 
+  plotOutput(&quot;gpoint&quot;)
+)
+
+
+server &lt;- function(input, output) {
+  output$gpoint &lt;- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent, select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 600))</code></pre>
+<div style="width: 100% ; height: 600px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+<div id="and-even-a-bit-more" class="section level2">
+<h2>… And even a bit more</h2>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui &lt;- fluidPage(
+  checkboxGroupInput(&quot;continent&quot;, &quot;Select continent&quot;, 
+                     choices = list(&quot;Africa&quot;, &quot;Americas&quot;, &quot;Asia&quot;, &quot;Europe&quot;, &quot;Oceania&quot;), 
+                     selected = &quot;Africa&quot;),
+  
+  sliderInput(&quot;slider&quot;, label = h3(&quot;GDP per capita&quot;), min = 240, 
+              max = 113600, value = 250), 
+  
+  plotOutput(&quot;gpoint&quot;)
+)
+
+
+server &lt;- function(input, output) {
+  output$gpoint &lt;- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent &amp; 
+                           gdpPercap &lt; input$slider , select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))</code></pre>
+<div style="width: 100% ; height: 700px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+<div id="lets-add-a-sidebar-to-make-it-look-nicer" class="section level2">
+<h2>… Let’s add a sidebar to make it look nicer!</h2>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse)
+library(shiny)
+
+ui &lt;- pageWithSidebar(
+  headerPanel(&quot;Options&quot;), 
+  sidebarPanel(
+    checkboxGroupInput(&quot;continent&quot;, &quot;Select continent&quot;, 
+                       choices = list(&quot;Africa&quot;, &quot;Americas&quot;, &quot;Asia&quot;, &quot;Europe&quot;, &quot;Oceania&quot;), 
+                       selected = &quot;Africa&quot;),
+    
+    sliderInput(&quot;slider&quot;, label = h3(&quot;GDP per capita&quot;), min = 240, 
+                max = 113600, value = 250)
+    ),
+  
+  mainPanel(
+    plotOutput(&quot;gpoint&quot;)
+  )
+)
+
+
+server &lt;- function(input, output) {
+  output$gpoint &lt;- renderPlot({
+    ggplot(data = subset(gapminder, continent == input$continent &amp; 
+                           gdpPercap &lt; input$slider , select = c(country:gdpPercap)), 
+           # the aes() function defines aesthetics
+           aes(x = year,  # x axis
+               y = lifeExp, # y axis
+               color = continent, # map color to continent
+               size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+      geom_point()
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 550))</code></pre>
+<div style="width: 100% ; height: 550px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p>Plot an interactive version of the life expectancy in African countries graph using the gapminder data and the static plot developed in Session 2 of Day 1. The interaction should allow users to select the country that they want to highlight. Some tips:</p>
+<ul>
+<li>Which part of the static code should be reactive?</li>
+<li>Which widget/s could be used to create the interaction?</li>
+<li>Create a list of African countries and use it as “choice” in the widget parameters</li>
+<li>Add a <em>sidebarPanel</em> and a <em>mainPanel</em> to the vizualization</li>
+</ul>
+</div>
+<div id="solution-code-for-static-figure" class="section level3">
+<h3>Solution: code for static figure</h3>
+</div>
+<div id="solution-create-interaction" class="section level3">
+<h3>Solution: Create interaction</h3>
+<pre class="r"><code>library(gapminder)
+library(tidyverse)
+library(shiny)
+
+gapminder_africa &lt;- gapminder %&gt;% 
+  # filter only African countries
+  filter(continent == &quot;Africa&quot;) %&gt;% 
+  # create a categorical variable that distinguishes
+  # between Rwanda and other African countries
+  mutate(color_plot = ifelse(country != &quot;Rwanda&quot;, # != = &quot;!&quot; + &quot;=&quot;
+                             &quot;Other African Countries&quot;, 
+                             &quot;Rwanda&quot;))
+
+africa_list &lt;- levels(factor(gapminder_africa$country)) # create a list with African countries
+
+ui &lt;- pageWithSidebar(
+  headerPanel(&quot;Options&quot;), 
+  sidebarPanel(
+    selectInput(&quot;country2&quot;, &quot;Select country&quot;, 
+                       choices = africa_list, # Use list of african countries as choices
+                       selected = &quot;Algeria&quot;) # Select Algeria
+  ),
+  
+  mainPanel(
+    plotOutput(&quot;gline&quot;)
+  )
+)
+
+
+server &lt;- function(input, output) {
+  output$gline &lt;- renderPlot({
+    gapminder_africa &lt;- gapminder %&gt;% 
+      # filter only African countries
+      filter(continent == &quot;Africa&quot;) %&gt;% 
+      # create a categorical variable that distinguishes
+      # between Rwanda and other African countries
+      mutate(color_plot = ifelse(country != input$country2, # != = &quot;!&quot; + &quot;=&quot;
+                                 &quot;Others&quot;, 
+                                 &quot;Selected country&quot;))
+    
+    
+    
+      plot &lt;- ggplot(gapminder_africa, 
+                          aes(x = year, 
+                              y = lifeExp, 
+                              group = country, 
+                              color = color_plot)) + 
+      geom_line(aes(alpha = color_plot)) + 
+      scale_alpha_discrete(&quot;&quot;, range = c(0.5, 1)) +  
+      scale_color_manual(&quot;&quot;, values = c(&quot;lightgrey&quot;, &quot;black&quot;)) + 
+      
+      # add theme
+      theme_bw() + # black and white theme
+      theme(legend.position = &quot;bottom&quot;, # legend position
+            panel.grid = element_blank()) # remove grid lines
+    
+    print(plot)
+  })
+}
+
+
+shinyApp(ui = ui, server = server, options = list(height = 600))</code></pre>
+<div style="width: 100% ; height: 600px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+</div>
+<div id="session-4-basic-interactive-maps" class="section level2">
+<h2>Session 4: Basic interactive maps</h2>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+world &lt;- readShapeSpatial(&quot;./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               &quot;iso3c&quot;, # input format
+                               &quot;continent&quot;) # output format
+
+africa &lt;- subset(world, continent == &quot;Africa&quot;)
+
+# fortify: bring dataset into shape that ggplot can understand
+africa_fort &lt;- fortify(africa, # we use the &quot;africa&quot; shapefile from previous slide
+                       region = &quot;ISO3&quot;) # this becomes &quot;id&quot; in the fortified dataset
+
+
+# get gapminder data 
+data(&quot;gapminder&quot;)
+
+# create country identifier for merging
+gapminder$ISO3 &lt;- countrycode(gapminder$country, &quot;country.name&quot;, &quot;iso3c&quot;)
+
+#only year 2007
+gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
+
+# join in gapminder data
+africa_fort &lt;- left_join(africa_fort, 
+                         gapminder2007, 
+                         by = c(&quot;id&quot; = &quot;ISO3&quot;))
+
+
+africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, 
+                group = group),
+            color = &quot;black&quot;)  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) +
+  
+  # appearance
+  labs(title = &quot;Life Expectancy in Africa, 2007\n&quot;, 
+       subtitle = &quot;Data: Gapminder\n&quot;) +
+  scale_fill_distiller(&quot;Life Expectancy&quot;, 
+                       palette = &quot;RdYlGn&quot;, 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), 
+        legend.position = &quot;bottom&quot;,
+        legend.text.align = 0) 
+
+plot(africa_map)</code></pre>
+<p><img src="sessions_day2_files/figure-html/map_1-1.png" width="672" /></p>
+<div id="creating-an-interactive-map" class="section level3">
+<h3>Creating an interactive map</h3>
+<pre class="r"><code>library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+ui &lt;- fluidPage(
+  radioButtons(&quot;variable&quot;, &quot;Select variable&quot;, 
+                     choices = list(&quot;lifeExp&quot;, &quot;pop&quot;, &quot;gdpPercap&quot;), 
+               selected = &quot;lifeExp&quot;),
+
+  plotOutput(&quot;gmap&quot;)
+)
+
+
+server &lt;- function(input, output) {
+  output$gmap &lt;- renderPlot({
+    world &lt;- readShapeSpatial(&quot;C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+    
+    world$continent &lt;- countrycode(world$ISO3, 
+                                   &quot;iso3c&quot;, # input format
+                                   &quot;continent&quot;) # output format
+    
+    africa &lt;- subset(world, continent == &quot;Africa&quot;)
+    
+    # fortify: bring dataset into shape that ggplot can understand
+    africa_fort &lt;- fortify(africa, # we use the &quot;africa&quot; shapefile from previous slide
+                           region = &quot;ISO3&quot;) # this becomes &quot;id&quot; in the fortified dataset
+    
+    
+    # get gapminder data 
+    data(&quot;gapminder&quot;)
+    
+    # create country identifier for merging
+    gapminder$ISO3 &lt;- countrycode(gapminder$country, &quot;country.name&quot;, &quot;iso3c&quot;)
+    
+    #only year 2007
+    gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
+    
+    # join in gapminder data
+    africa_fort &lt;- left_join(africa_fort, 
+                             gapminder2007, 
+                             by = c(&quot;id&quot; = &quot;ISO3&quot;))
+    
+    #Create reactive variable
+    africa_fort$var &lt;- africa_fort[,input$variable]
+    
+    africa_map &lt;- ggplot() +
+      geom_path(data = africa_fort,
+                aes(x = long, y = lat, 
+                    group = group),
+                color = &quot;black&quot;)  +
+      geom_map(data = africa_fort,
+               aes(map_id = id,
+                   fill = var),
+               map = africa_fort) +
+      
+      # appearance
+      labs(title = &quot;&quot;, 
+           subtitle = &quot;&quot;) +
+      scale_fill_distiller(&quot;&quot;, 
+                           palette = &quot;RdYlGn&quot;, 
+                           direction = 1) +
+      coord_equal() +
+      theme_void() +  
+      theme(panel.grid = element_blank(), 
+            legend.position = &quot;bottom&quot;,
+            legend.text.align = 0) 
+    
+    plot(africa_map)
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))</code></pre>
+<div style="width: 100% ; height: 700px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p>Plot an interactive vizualization in which not only the user can select the variable AND the year that should be plotted. The app layout should include also a sidebar and a mainpanel. Steps:</p>
+<ol style="list-style-type: decimal">
+<li>Create a ui with a sidebar and a mainpanel</li>
+<li>Create two widgets in the ui (one for the variable and one for the years)<br />
+</li>
+<li>Create a reactive expression to subset the data: (1) select year and (2) select variable</li>
+<li>Create map in server</li>
+<li>Call shiny fuction</li>
+</ol>
+</div>
+<div id="solution" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>ui &lt;- pageWithSidebar(
+  headerPanel(&quot;Select options&quot;),
+  sidebarPanel(
+    radioButtons(&quot;variable&quot;, &quot;Select variable&quot;, 
+                 choices = list(&quot;Life expectancy&quot; = &quot;lifeExp&quot;, &quot;Population&quot; = &quot;pop&quot;, 
+                                &quot;GDP per capita&quot; = &quot;gdpPercap&quot;), 
+                 selected = &quot;lifeExp&quot;),
+    radioButtons(&quot;year&quot;, label = &quot;Select year&quot;,
+                 choices = list(&quot;1952&quot;, &quot;1957&quot;, &quot;1962&quot;, &quot;1967&quot;, 
+                                &quot;1972&quot;, &quot;1977&quot;, &quot;1982&quot;, &quot;1987&quot;,
+                                &quot;1992&quot;, &quot;1997&quot;, &quot;2002&quot;, &quot;2007&quot;), 
+                 selected = &quot;1952&quot;)
+  ),
+  mainPanel(
+    plotOutput(&quot;gmap&quot;)
+  )
+)
+
+
+
+server &lt;- function(input, output) {
+  output$gmap &lt;- renderPlot({
+    world &lt;- readShapeSpatial(&quot;C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+    
+    world$continent &lt;- countrycode(world$ISO3, 
+                                   &quot;iso3c&quot;, # input format
+                                   &quot;continent&quot;) # output format
+    
+    africa &lt;- subset(world, continent == &quot;Africa&quot;)
+    
+    # fortify: bring dataset into shape that ggplot can understand
+    africa_fort &lt;- fortify(africa, # we use the &quot;africa&quot; shapefile from previous slide
+                           region = &quot;ISO3&quot;) # this becomes &quot;id&quot; in the fortified dataset
+    
+    
+    # get gapminder data 
+    data(&quot;gapminder&quot;)
+    
+    # create country identifier for merging
+    gapminder$ISO3 &lt;- countrycode(gapminder$country, &quot;country.name&quot;, &quot;iso3c&quot;)
+    
+    #only year
+    gapminder_year &lt;- gapminder[gapminder$year == input$year, ]
+    
+    # join in gapminder data
+    africa_fort &lt;- left_join(africa_fort, 
+                             gapminder_year, 
+                             by = c(&quot;id&quot; = &quot;ISO3&quot;))
+    
+    #Create reactive variable
+    africa_fort$var &lt;- africa_fort[,input$variable]
+    
+    africa_map &lt;- ggplot() +
+      geom_path(data = africa_fort,
+                aes(x = long, y = lat, 
+                    group = group),
+                color = &quot;gray&quot;)  +
+      geom_map(data = africa_fort,
+               aes(map_id = id,
+                   fill = var),
+               map = africa_fort) +
+      
+      # appearance
+      labs(title = &quot;&quot;, 
+           subtitle = &quot;&quot;) +
+      scale_fill_distiller(&quot;&quot;, 
+                           palette = &quot;RdYlGn&quot;, 
+                           direction = 1) +
+      coord_equal() +
+      theme_void() +  
+      theme(panel.grid = element_blank(), 
+            legend.position = &quot;bottom&quot;,
+            legend.text.align = 0) 
+    
+    plot(africa_map)
+  })
+}
+
+shinyApp(ui = ui, server = server, options = list(height = 700))</code></pre>
+<div style="width: 100% ; height: 700px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+</div>
+</div>
+<div id="session-5-deploying-and-sharing-apps" class="section level2">
+<h2>Session 5: Deploying and sharing apps</h2>
+<div id="main-steps-for-building-an-app-1" class="section level3">
+<h3>Main steps for building an app</h3>
+<ol style="list-style-type: decimal">
+<li>Set main goal for the app</li>
+<li>Install R Studio and necessary packages (e.g. shiny)</li>
+<li>Select visualization</li>
+<li>Prepare the data accordignly</li>
+<li>Code the app <strong>6. Deploy and share the app</strong></li>
+</ol>
+</div>
+<div id="deploying-and-sharing-the-app" class="section level3">
+<h3>Deploying and sharing the app</h3>
+<p>Every shiny app is maintained by a computer running R<br />
+How to save it:</p>
+<ul>
+<li>app.R</li>
+<li>datasets, images, css, helper scripts, etc.</li>
+</ul>
+</div>
+<div id="deploying-and-sharing-the-app-1" class="section level3">
+<h3>Deploying and sharing the app</h3>
+<p>Using shinyapps.io:</p>
+<ul>
+<li>Free</li>
+<li>Secure</li>
+<li>Scalable</li>
+</ul>
+</div>
+<div id="sharing-in-your-website-via-iframe" class="section level3">
+<h3>Sharing in your website via iframe</h3>
+<div class="figure">
+<img src="figures/gigawebsite.png" alt="GIGA 2018" />
+<p class="caption">GIGA 2018</p>
+</div>
+</div>
+<div id="other-sharing-options" class="section level3">
+<h3>Other sharing options</h3>
+<ul>
+<li>R Markdown</li>
+<li>R Shiny presentations</li>
+</ul>
+</div>
+</div>
+<div id="thanks" class="section level2">
+<h2>Thanks!</h2>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

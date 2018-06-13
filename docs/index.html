@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Making your research accessible: Data Visualization and Interactive Graphics</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making your research accessible</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="software.html">
+    <span class="fa fa-laptop"></span>
+     
+    Required Software and Installation Instructions
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="session1.html">Session 1: Intro, R Refresher, and Code Organization</a>
+    </li>
+    <li>
+      <a href="session2.html">Session 2: ggplot2</a>
+    </li>
+    <li>
+      <a href="session3.html">Session 3: Facets and small multiples</a>
+    </li>
+    <li>
+      <a href="session4.html">Session 4: Maps</a>
+    </li>
+    <li>
+      <a href="session5.html">Session 5: General Tips and Next Steps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sessions_day2.html">All sessions</a>
+    </li>
+    <li>
+      <a href="Visualizations_R_Palop_2018.pdf">Slides Session 1</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-list"></span>
+     
+    Data
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="help.html">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Making your research accessible: Data Visualization and Interactive Graphics</h1>
+
+</div>
+
+
+<style>
+th:nth-child(1){
+  width:20%;
+  }
+
+th:nth-child(2){
+  width:60%;
+  }
+  
+th:nth-child(3){
+  width:20%;
+  }
+  
+</style>
+<div id="welcome" class="section level1">
+<h1>Welcome</h1>
+<p>This is the course website for the course “Making Your Research Accessible” at the GIGA German Institute of Global and Area Studies, 14-15 June 2018.</p>
+</div>
+<div id="course-description-and-objectives" class="section level1">
+<h1>Course Description and Objectives</h1>
+<p>This course aims to enable participants to produce high-quality plots based on raw data and/or model outputs using the R package “ggplot2” (1st day) and to teach principles of interactive data visualization with the R package “shiny” (2nd day).</p>
+<p>The first day will familiarize participants with the logic of the ggplot package and apply those principles to common use cases. In addition to some generic examples, such as scatterplots with/without regression lines, boxplots, or line charts, these use cases will be largely driven by participants’ needs and requests. Possible topics include grouped plots, faceting (i.e. dividing your data into many categories and plot them individually for comparison), or visualizing regression model output (e.g. through “dot-whisker” plots). Participants will learn through hand-on exercises to build their own plots and learn how to export plots in various formats.</p>
+<p>The second day will revolve around the main steps involved in creating interactive web applications using R and Shiny Apps. During this day, participants will learn how to prepare data for building interactive graphics, the basic principles for crafting interactive apps and the main alternatives to deploy and share visualizations. After a brief introductory part, this session will be mostly practical. Participants will learn to create generic apps, as well as their own particular visualizations based on participants’ datasets and examples.</p>
+<p>This course is NOT an introduction into principles of good data visualization as pioneered e.g. by <a href="https://www.edwardtufte.com/tufte/books_vdqi">Edward Tufte</a>, but a hands-on course on the technical process of how to generate plots with ggplot2. For further resources on these topics, see below.</p>
+</div>
+<div id="instructors" class="section level1">
+<h1>Instructors</h1>
+<p>Felix Haaß is a Reasearch Fellow at the GIGA Institute of African Affairs. Pau Palop García is a Research Fellow at the GIGA Institute of Latin American Studies.</p>
+</div>
+<div id="requirements" class="section level1">
+<h1>Requirements</h1>
+<p>The class does not assume prior knowledge of R, but expects some familiarity with other statistical software packages, such as Stata or SPSS. The class expects that all participants will have a working installation of R, RStudio, and the “tidyverse” packages (installation instructions can be found <a href="software.html">here</a>). Any prior exposure to R will be an asset.</p>
+<p>Please bring a laptop with a working internet connection to the course as we will complete hands-on exercises throughout the day.</p>
+</div>
+<div id="how-to-use-this-website" class="section level1">
+<h1>How to use this website</h1>
+<ol style="list-style-type: decimal">
+<li>You should start by reading and following the <a href="./software.html">software and installation guide.</a></li>
+<li>The “Session” drop down menu at the top of this page will provide links to the individual sessions, the presentation slides, exercises, and R code solutions.</li>
+<li>The <a href="./help.html">help</a> page in the upper right corner provides useful links and further resources on ggplot2 and principles of good data visualization.</li>
+</ol>
+</div>
+<div id="schedule" class="section level1">
+<h1>Schedule</h1>
+<p><em>First Day</em> (Felix Haaß)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Topic</th>
+<th>Notes/Packages used</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10.00-10.30</td>
+<td><a href="./session1.html">Session 1: Introduction and R refresher; Reading data, project organization</a></td>
+<td><code>readr</code> and <code>haven</code> packages; RStudio projects</td>
+</tr>
+<tr class="even">
+<td><em>10.30-10.45</em></td>
+<td><em>Coffee Break</em></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>10.45-12.15</td>
+<td><a href="./session2.html">Session 2: The anatomy of a ggplot2 plot</a></td>
+<td><code>ggplot2</code>: aesthetics mapping &amp; geoms</td>
+</tr>
+<tr class="even">
+<td><em>12.15-13.15</em></td>
+<td><em>Lunch Break</em></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>13.15-14.45</td>
+<td><a href="./session3.html">Session 3: Use-Cases I - Facets and small multiples; sorting facets</a></td>
+<td><code>ggplot2</code></td>
+</tr>
+<tr class="even">
+<td><em>14.45-15.00</em></td>
+<td><em>Coffee Break</em></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>15.00-16.00</td>
+<td><a href="./session4.html">Session 4: Use-Case II - Basic Maps</a></td>
+<td><code>sp</code> &amp; <code>maptools</code> package</td>
+</tr>
+<tr class="even">
+<td>16.00-17.00</td>
+<td><a href="./session5.html">Session 5: Wrap-up - Exporting plots; questions; where to get help</a></td>
+<td>Books; StackOverflow; Twitter</td>
+</tr>
+</tbody>
+</table>
+<p><em>Second Day</em> (Pau Palop Garcia)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10.00-10.30</td>
+<td>Session 1: Introduction and main goals</td>
+</tr>
+<tr class="even">
+<td>10.30-12.00</td>
+<td>Session 2: Basics for building an app</td>
+</tr>
+<tr class="odd">
+<td>12.00-13.00</td>
+<td><em>Lunch break</em></td>
+</tr>
+<tr class="even">
+<td>13.00-14.00</td>
+<td>Session 3: Examples I - Scatter plots-</td>
+</tr>
+<tr class="odd">
+<td>14.00-14.15</td>
+<td><em>Coffee break</em></td>
+</tr>
+<tr class="even">
+<td>14.15-15.30</td>
+<td>Session 4: Examples II - Interactive maps-</td>
+</tr>
+<tr class="odd">
+<td>15.30-16.00</td>
+<td>Session 5: Deploying and sharing apps</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

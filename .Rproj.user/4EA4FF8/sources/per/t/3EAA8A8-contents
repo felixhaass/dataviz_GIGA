@@ -1,0 +1,34 @@
+name: data-viz-course-page
+navbar:
+  title: Data Visualization for Political Scientists
+  left:
+  - text: Home
+    icon: fa-home
+    href: index.html
+  - text: Required Software and Installation Instructions
+    icon: fa-laptop
+    href: software.html
+  - text: Sessions
+    icon: fa-gear
+    menu:
+    - text: 'Session 1: Intro, R Refresher, and Code Organization'
+      href: session1.html
+    - text: 'Session 2: ggplot2'
+      href: session2.html
+    - text: 'Session 3: Facets and small multiples'
+      href: session3.html
+    - text: 'Session 4: Coefficient Plots'
+      href: session4.html
+    - text: 'Session 5: General Tips and Next Steps'
+      href: session5.html
+  right:
+  - icon: fa-question fa-lg
+    href: help.html
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    lib_dir: site_libs
+    self_contained: no
+output_dir: docs
+

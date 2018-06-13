@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Making your research accessible: Data Visualization and Interactive Graphics</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Felix Haass" />
+    <link href="session5_wrapup_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="session5_wrapup_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="session5_wrapup_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="session5_wrapup_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Making your research accessible: Data Visualization and Interactive Graphics
+## Session 5 - General Tips and Next Steps
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=796px>
+</html>
+### Felix Haass
+### 15 Januar 2018
+
+---
+
+
+
+
+# Saving your ggplot2 plots
+
+We use the `ggsave()` function to export plots in any format we like. Simply include the `ggsave()` call after your ggplot2 building blocks, using variations of the following options
+
+
+```r
+ggsave(filename = "./figures/rwanda_plot.png",  # remember "figures" folder?
+                                                # ".png" suffix determines file type
+       plot = rwanda_plot, # which plot to save?
+       width = 8, height = 4.5, # values between 5 and 10 inches are reasonable
+       units = "in", 
+       dpi = 300, # 300dpi = printing quality
+       scale = 0.8) # enlarge (&lt; 1) / shrink (&gt; 1) text
+```
+
+---
+
+# Where To Find Help
+
+.font150[[Data Visualization - A practical introduction](http://socviz.co/)]
+
+by Kieran Healy (forthcoming Princeton University Press)
+
+&lt;div align = "center"&gt;
+&lt;img src="http://socviz.co/assets/dv-cover-executive-b.jpg" width = 35%/&gt;
+&lt;/div&gt;
+
+
+---
+
+# Where To Find Help
+
+.font150[[StackOverflow](https://stackoverflow.com/questions/tagged/ggplot2)]
+
+Tip: include the term "stack" and "ggplot" in your google query terms
+
+&lt;div align = "center"&gt;
+&lt;img src="./images/so.png" width = 76%/&gt;
+&lt;/div&gt;
+
+
+
+---
+
+# Where To Find Help
+
+.font150[[R for Data Science](http://r4ds.had.co.nz/)]
+
+&lt;div align = "center"&gt;
+&lt;img src="http://r4ds.had.co.nz/cover.png" width = 40%/&gt;
+&lt;/div&gt;
+
+
+
+---
+
+# Where To Find Help
+
+[#rstats Twitter hashtag](https://twitter.com/hashtag/rstats)
+
+&lt;div align = "center"&gt;
+&lt;blockquote class="twitter-tweet" data-lang="de"&gt;&lt;p lang="en" dir="ltr"&gt;When you&amp;#39;re using a new R package and everything you try results in the red error code of nope &lt;a href="https://twitter.com/hashtag/Rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#Rstats&lt;/a&gt; &lt;a href="https://t.co/tcBMypctwi"&gt;pic.twitter.com/tcBMypctwi&lt;/a&gt;&lt;/p&gt;&amp;mdash; Daniel Swindlehurst (@SwindleApe) &lt;a href="https://twitter.com/SwindleApe/status/938025492103524352?ref_src=twsrc%5Etfw"&gt;5. Dezember 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+
+&lt;/div&gt;
+
+
+---
+
+# Cheatsheets
+
+&lt;div align = "center"&gt;
+&lt;img src = "./images/cheatsheets.png"&gt;
+&lt;/div&gt;
+
+
+---
+
+# General Tips
+
+- Press &lt;kbd&gt;Tab&lt;/kbd&gt; to autocomplete!
+- Use keyboard shortcuts
+    - &lt;kbd&gt;Strg/Ctrl&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;M&lt;/kbd&gt; for `%&gt;%`
+    - &lt;kbd&gt;Alt&lt;/kbd&gt; + &lt;kbd&gt;-&lt;/kbd&gt; for `&lt;-`
+    - &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;1/2/3&lt;/kbd&gt; switches between RStudio panes
+- Name things often &amp; understandably (e.g. not `m1` but `baseline_model`)
+    - Follow a style guide
+- Use comments `#` often and judiciously
+    - Comment out several lines of code with &lt;kbd&gt;Strg/Ctrl&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;c&lt;/kbd&gt;
+- Look for package vignettes on Google
+    
+
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+---
+
+# Labels and Text
+
+`geom_text` is useful for simple text display; `geom_repel` from the `ggrepel` package has more advanced functions. 
+
+
+```r
+library(tidyverse)
+library(gapminder)
+
+gapminder_africa &lt;- gapminder %&gt;% 
+  filter(continent == "Africa") %&gt;% 
+  filter(year &gt; 1990)
+
+rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, y = lifeExp)) +
+  geom_point() +
+  geom_text(aes(label = country)) # `label` is an aesthetic like `color`
+                                  # we map 'country' to label
+```
+
+---
+
+# Labels and Text
+
+&lt;img src="session5_wrapup_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Labels and Text: Subset data first!
+
+It often makes sense to create a separate data frame with the labels you want to you plot. 
+
+
+```r
+min_lifeexp &lt;- gapminder_africa %&gt;% 
+  # select only observation with smallest
+  # or biggest lifeExp (outliers)
+  filter(lifeExp == min(lifeExp) | lifeExp == max(lifeExp)) 
+
+rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, y = lifeExp)) +
+  geom_point() +
+  geom_text(data = min_lifeexp, 
+            aes(label = country))    
+```
+
+---
+
+# Labels and Text: Subset data first!
+
+&lt;img src="session5_wrapup_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Labels and Text: ggrepel
+
+
+
+
+```r
+library(ggrepel)
+
+rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, y = lifeExp)) +
+  geom_point() +
+  geom_label_repel(data = min_lifeexp, 
+                   aes(label = country))    
+```
+
+---
+
+# Labels and Text: ggrepel
+
+&lt;img src="session5_wrapup_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Histograms and variable distributions
+
+
+```r
+lifexp_histplot &lt;- ggplot(gapminder, 
+                          aes(x = lifeExp)) + # note that no 'y' mapping
+  geom_histogram() +
+  facet_wrap(~ continent)
+
+print(lifexp_histplot)
+```
+
+&lt;img src="session5_wrapup_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Additional exercises
+
+1. Plot a scatterplot of the relationship between `gdpPercap` and `lifeExp` and adjust the point size to population. 
+
+2. Install the `WDI` package to access World Bank data. Use the help function `help(WDI)` to find out how the package's main function `WDI()` works. Download data for GDP (indicator: `NY.GDP.MKTP.CD`) and corruption (indicator `IQ.CPA.TRAN.XQ`). Try to plot the two variables for all countries in the world.
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

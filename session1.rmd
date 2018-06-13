@@ -1,0 +1,38 @@
+---
+title: "Session 1: Intro, R Refresher, and Code Organization"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    collapsed: true
+    code_download: true
+    pandoc_args: [
+      --columns=10000
+    ]
+---
+
+# Slides
+
+- [HTML](./slides/session1_intro.html)
+
+
+
+-----
+
+
+<style>
+th:nth-child(1){
+  width:10%;
+  }
+
+th:nth-child(2){
+  width:60%;
+  }
+
+
+</style>
+
+```{r child="./slides/session1_intro.rmd"}
+
+```

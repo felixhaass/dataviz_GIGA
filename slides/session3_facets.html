@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Making your research accessible: Data Visualization and Interactive Graphics</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Felix Haass" />
+    <link href="session3_facets_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="session3_facets_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="session3_facets_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="session3_facets_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Making your research accessible: Data Visualization and Interactive Graphics
+## Session 3 - Facets and Small Multiples
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=796px>
+</html>
+### Felix Haass
+
+---
+
+
+
+
+
+# facets
+
+`faceted` plots (or small multiple plots) are a way to divide your data up by a categorical variable. Facets are "not a geom, but rather a way of organizing a series of geoms" ([Kieran Healy](http://socviz.co/groupfacettx.html#facet-to-make-small-multiples)).
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# facets: think about the comparison!
+
+GDP/pc development by *continent*. 
+
+In ggplot, we use the `facet_wrap()` building block to specify the faceting variable(s). 
+
+
+```r
+p &lt;- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color="gray70", 
+            aes(group = country)) + # recall we need to map group to country
+  facet_wrap(~ continent, # "~" 
+             ncol = 5) # how many columns?
+```
+
+
+---
+
+# facets: think about the comparison!
+
+```r
+print(p)
+```
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# facets: all elements
+
+
+```r
+library(tidyverse)
+library(gapminder)
+
+p &lt;- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color="gray70", aes(group = country)) +
+  # add smoother
+  geom_smooth(size = 1.1, method = "loess", se = FALSE) +
+  # log y axis (could've also wrapped y=log(gdpPercap) in aes() above)
+  scale_y_log10(labels=scales::dollar) +
+  # facet command
+  facet_wrap(~ continent, ncol = 5) +
+  # labels and appearance tweaks
+  labs(x = "Year",
+       y = "GDP per capita",
+       title = "GDP per capita on Five Continents") +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 5))
+```
+
+---
+
+# facets: all elements
+
+
+```r
+print(p)
+```
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# facets: more applications
+
+Recall our example: relationship between GDP per capita and population in Asia. 
+
+
+```r
+gdp_pop_plot &lt;- ggplot(gapminder %&gt;% filter(continent == "Asia"), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_smooth(method = "lm")
+
+print(gdp_pop_plot)
+```
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse, center, middle
+
+# Really a negative relationship?
+
+---
+
+# facets: more applications
+
+Plot regression line by country (without facets)
+
+
+```r
+gdp_pop_plot &lt;- ggplot(gapminder %&gt;% filter(continent == "Asia"), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(aes(color = country), 
+             alpha = 0.5, size = 2) +
+  geom_smooth(aes(fill = country, color = country),
+              method = "lm") +
+  theme(legend.position = "none")
+```
+
+---
+
+# facets: more applications
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# facets: more applications
+
+Prior plot useful for MoMA, but not for the data analyst. How to do better? 
+
+facets!
+
+
+
+```r
+gapminder_asia &lt;- gapminder %&gt;% 
+  filter(continent == "Asia")
+
+gdp_pop_plot &lt;- ggplot(gapminder_asia, 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", size = 0.7) + 
+  facet_wrap(~ country, scales = "free") + # scales = "free" to vary axis limits +
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) 
+```
+
+---
+
+# facets: more applications
+
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+class: inverse
+background-image: url("Ninja-header.svg_opacity1.png")
+background-size: contain
+
+# Useful tips from the dataviz ninja
+
+1. Think hard about *what* you want to visualize!
+
+2. Don't use too many aesthetics - just use those that help you clarify your comparison!
+
+3. Trial and error is your friend!
+
+4. **Alphabet is the least useful ways to organize information.**
+
+---
+
+# facets: order by summary statistic
+
+
+
+```r
+library(forcats) # useful to reorder factors or ordered categorical variables
+
+gapminder_asia &lt;- gapminder %&gt;% 
+  filter(continent == "Asia") %&gt;% 
+  # do all data manipulation by country
+  group_by(country) %&gt;% 
+  # extract beta coefficient from reg of GDP on pop 
+  mutate(beta = coef(lm(log(gdpPercap) ~ log(pop)))[2]) %&gt;%  
+  # remove country grouping 
+  ungroup() %&gt;% 
+  # sort "country" variable by beta
+  mutate(country_order = fct_reorder(country, beta))
+
+head(gapminder_asia, 5)
+```
+
+```
+## # A tibble: 5 x 8
+##       country continent  year lifeExp      pop gdpPercap        beta
+##        &lt;fctr&gt;    &lt;fctr&gt; &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Afghanistan      Asia  1952  28.801  8425333  779.4453 -0.03799305
+## 2 Afghanistan      Asia  1957  30.332  9240934  820.8530 -0.03799305
+## 3 Afghanistan      Asia  1962  31.997 10267083  853.1007 -0.03799305
+## 4 Afghanistan      Asia  1967  34.020 11537966  836.1971 -0.03799305
+## 5 Afghanistan      Asia  1972  36.088 13079460  739.9811 -0.03799305
+## # ... with 1 more variables: country_order &lt;fctr&gt;
+```
+
+---
+
+# facets: order by summary statistic
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+# facets: Exercise
+
+Plot the relationship between `gdpPercap` and `lifeExp` in the Americas, faceted by `country`.
+
+Bonus: sort `country` by the direction + strength of the relationship between `gdpPercap` and `lifeExp`
+
+What is surprising?
+
+
+
+---
+
+# facets: Exercise Solution
+
+
+```r
+gapminder_americas &lt;- gapminder %&gt;% 
+  filter(continent == "Americas") %&gt;% 
+  group_by(country) %&gt;% 
+  mutate(beta = coef(lm(lifeExp ~ log(gdpPercap)))[2]) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(country_order = fct_reorder(country, beta))
+
+gdp_lifeexp_americas &lt;- ggplot(gapminder_americas, 
+                       aes(x = log(gdpPercap), 
+                           y = lifeExp)) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", size = 0.7) + 
+  facet_wrap(~ country_order,  # facet by "country_order"!
+             scales = "free") + # scales = "free" to vary axis limits + 
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) 
+```
+
+---
+
+# facets: Exercise Solution
+
+&lt;img src="session3_facets_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

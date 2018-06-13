@@ -1,0 +1,65 @@
+---
+title: "Data Visualization for Political Scientists"
+output: 
+  html_document:
+    # toc: true
+    # toc_depth: 4
+    # toc_float: 
+    #   collapsed: false
+    # code_download: true
+    pandoc_args: [
+      "--columns=10000"
+    ]
+    
+---
+
+<style>
+th:nth-child(1){
+  width:20%;
+  }
+
+th:nth-child(2){
+  width:60%;
+  }
+  
+th:nth-child(3){
+  width:20%;
+  }
+  
+</style>
+
+# Welcome
+
+This is the course website for the course "Data Visualization for Political Scientists" at the University of Cologne, 15 January 2018.
+
+# Course Description and Objectives
+
+This course is for everyone interested in producing high-quality plots based on raw data and/or model outputs using the R package [`ggplot2.`](http://ggplot2.tidyverse.org/) The purpose of this course is to familiarize participants with the logic of the ggplot2 package and apply those principles to common use cases. In addition to some generic examples, such as scatterplots with/without regression lines, boxplots, or line charts, these use cases will be largely driven by participants' needs and request. Possible topics include grouped plots, faceting (i.e. dividing your data into many categories and plot them individually for comparison), or visualizing regression model output (e.g. through "dot-whisker" plots). Participants will learn through hand-on exercises to build their own plots and learn how to export plots in various formats. 
+
+This course is NOT an introduction into principles of good data visualization as pioneered e.g. by [Edward Tufte](https://www.edwardtufte.com/tufte/books_vdqi), but a hands-on course on the technical process of how to generate plots with ggplot2. For further resources on these topics, see below. 
+
+# Requirements
+The class does not assume prior knowledge of R, but expects familiarity with other statistical software packages, such as Stata or SPSS. The class expects that all participants will have a working installation of R, RStudio, and the "tidyverse" packages (installation instructions can be found [here](software.html)). Any prior exposure to R will be an asset.
+
+Please bring a laptop with a working internet connection to the course as we will complete hands-on exercises throughout the day. 
+
+# How to use this website
+
+1. You should start by reading and following the [software and installation guide.](./software.html)
+2. The "Session" drop down menu at the top of this page will provide links to the individual sessions, the presentation slides, exercises, and R code solutions. 
+3. The [help](./help.html) page in the upper right corner provides useful links and further resources on ggplot2 and principles of good data visualization. 
+
+
+# Schedule
+
+| Time |	Topic |	Notes/Packages used |
+|-------|-------|-----------------------|
+| 9.30-10.00 | [Session 1: Introduction and R refresher](./session1.html)  | Basic `R` functionality |
+| 10.00-10.30 | [Session 1: Reading data, project organization](./session1.html) |	`readr` and `haven` packages; RStudio projects |
+| *10.30-10.45* |	*Coffee Break*	| |
+| 10.45-12.15	| [Session 2: The anatomy of a ggplot2 plot](./session2.html) |	`ggplot2`: aesthetics mapping & geoms |
+ *12.15-13.15* |	*Lunch Break*	|| 
+13.15-14.45 |	[Session 3: Use-Cases I - Facets and small multiples; sorting facets](./session3.html) |	`ggplot2` |
+| *14.45-15.00* |	*Coffee Break*	|
+| 15.00-16.00 |	[Session 4: Use-Case II - Coefficient plots](./session4.html) |	`dotwhisker` package |
+| 16.00-17.00 |	[Session 5: Wrap-up - Exporting plots; questions; where to get help](./session5.html) |	Books; StackOverflow; Twitter |

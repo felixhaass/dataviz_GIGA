@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Making your research accessible: Data Visualization and Interactive Graphics</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Pau Palop Garcia / Felix Haass" />
+    <link href="session1_intro_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="session1_intro_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="session1_intro_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="session1_intro_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Making your research accessible: Data Visualization and Interactive Graphics
+## GIGA Doctoral Programme Workshop
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=796px>
+</html>
+### Pau Palop Garcia / Felix Haass
+
+---
+
+
+# Introduction - Me
+
+
+
+**Felix Haass**
+
+&lt;i class="fa fa-university"&gt;&lt;/i&gt; ABI Freiburg / GIGA Hamburg
+
+&lt;i class="fa fa-search"&gt;&lt;/i&gt; Political economy; conflict, democratization, United Nations
+
+&lt;i class="fa fa-twitter"&gt;&lt;/i&gt; [felixhaass](http://twitter.com/felixhaass)
+
+&lt;i class="fa fa-globe"&gt;&lt;/i&gt; [http://felixhaass.github.io](http://felixhaass.github.io)
+
+&lt;i class="fa fa-envelope-o"&gt;&lt;/i&gt; [haass@giga-hamburg.de](mailto:haass@giga-hamburg.de)
+
+---
+
+# Introduction - You
+
+Briefly introduce yourself!
+
+&lt;i class="fa fa-question"&gt;&lt;/i&gt; Your Name
+
+&lt;i class="fa fa-search"&gt;&lt;/i&gt; Your Research
+
+&lt;i class="fa fa-binoculars"&gt;&lt;/i&gt; Your Motivation for Participation in the Workshop
+
+---
+
+# Learning Objectives
+
+- Learn principles of how to use the `ggplot2` package to create informative data visualizations  
+- We will learn mechanics of the software package, rather than good visualization principles. For infos on that, see course page (watch out for the dataviz ninja, though!).   
+- Know where to find help
+
+---
+
+# Course Principles
+
+- Ask questions at any time!
+- Collaborate with your neighbours! 
+- Individual preferences/data visualization problems are most welcome!
+
+&lt;div align = "center"&gt;
+&lt;blockquote class="twitter-tweet" data-lang="de"&gt;
+&lt;p lang="en" dir="ltr"&gt;You&amp;#39;re doing it right if you get frustrated: if you&amp;#39;re not frustrated, you&amp;#39;re (probably) not stretching yourself mentally&lt;/p&gt;&amp;mdash; Hadley Wickham (@hadleywickham) 
+&lt;a href="https://twitter.com/hadleywickham/status/565516733516349441?ref_src=twsrc%5Etfw"&gt;11. Februar 2015&lt;/a&gt;
+&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+---
+
+# Outline of the Course
+
+&lt;!-- &lt;style&gt; --&gt;
+&lt;!-- th:nth-child(1){ --&gt;
+&lt;!--   width:10%; --&gt;
+&lt;!--   } --&gt;
+
+&lt;!-- th:nth-child(2){ --&gt;
+&lt;!--   width:60%; --&gt;
+&lt;!--   } --&gt;
+
+
+&lt;!-- &lt;/style&gt; --&gt;
+
+*First Day* 
+
+| Time |	Topic |
+|-------|-------|
+| 10.00-10.45 | Session 1: Introduction and R refresher; Reading data, project organization |
+| *10.45-11.00* |	*Coffee Break*	| 
+| 11.00-12.15	| Session 2: The anatomy of a ggplot2 plot | 
+| *12.15-13.15* |	*Lunch Break*	|  
+| 13.15-14.45 |	Session 3: Use-Cases I - Facets and small multiples |	
+| *14.45-15.00* |	*Coffee Break*	| 
+| 15.00-16.00 |	Session 4: Use-Case II - Basic Maps |  
+| 16.00-17.00 |	Session 5: Wrap-up - Exporting plots; questions; where to get help |  
+
+
+---
+
+# R Refresher - What is R?
+
+- `R` is a programming language for statistical analysis
+    - "Programming language": repeat tedious tasks; replicability; connect to unusual data sources (Twitter, web sites, text documents, ...)
+    - "statistical analysis": many packages to do any statistical analysis you want
+- `RStudio` is the interactive software with which we write and execute R code, plot things, view the R memory environment (...and much more)
+
+---
+
+# R Refresher - Libraries
+
+R uses different **libraries** or **packages** to load specific functions (read excel files, talk to Twitter, generate plots, ...): https://cran.r-project.org/. You load a package or a library with the command
+
+
+```r
+library(read_excel) # read_excel is the package name (without quotation marks)
+```
+
+If a command throws an error, chances are you either 
+
+- forgot to load the respective library
+- have a syntax error - **R is case sensitive!** 
+
+To install a **package** we use:
+
+
+```r
+install.packages("gapminder") # with quotation marks!
+```
+
+
+---
+
+# R Refresher - Assignment
+
+In R, we assign **stuff** (numbers, characters, data frames) to **things** (objects)
+
+
+```r
+url &lt;- "http://gmi.bicc.de/index.php?page=ranking-table"
+```
+
+- `url`: object, in this case: a character vector 
+- `"http://gmi.bicc.de/index.php?page=ranking-table"`: "stuff" (URL, could be any text or number)   
+- `&lt;-`: assign command, type `&lt;` and `-` (shortcut: &lt;kbd&gt;alt&lt;/kbd&gt; + &lt;kbd&gt;-&lt;/kbd&gt; in RStudio)  
+
+---
+
+# R Refresher - Objects
+
+In R, everything is an object--and you can have multiple objects in your memory at the same time!
+
+
+```r
+# 1st object: assign numbers to a vector
+numbers &lt;- 1:5
+
+# 2nd object: read data from an excel sheet
+sipri &lt;- read_excel("./data/SIPRI-Milex-data-1949-2016_cleaned.xlsx", 
+                    sheet = 5, 
+                    na = c("xxx", ". ."))
+```
+
+Executing this command yields to objects in memory, `numbers` the vector of numbers and the data frame `sipri`.
+
+
+---
+
+# R Refresher - Data Frames
+
+Data frames are rectangular data tables, like an Excel spreadsheet. 
+
+
+
+
+```r
+library(gapminder)
+library(tidyverse)
+
+gapminder
+```
+
+```
+## # A tibble: 1,704 x 6
+##    country     continent  year lifeExp      pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       1952    28.8  8425333       779
+##  2 Afghanistan Asia       1957    30.3  9240934       821
+##  3 Afghanistan Asia       1962    32.0 10267083       853
+##  4 Afghanistan Asia       1967    34.0 11537966       836
+##  5 Afghanistan Asia       1972    36.1 13079460       740
+##  6 Afghanistan Asia       1977    38.4 14880372       786
+##  7 Afghanistan Asia       1982    39.9 12881816       978
+##  8 Afghanistan Asia       1987    40.8 13867957       852
+##  9 Afghanistan Asia       1992    41.7 16317921       649
+## 10 Afghanistan Asia       1997    41.8 22227415       635
+## # ... with 1,694 more rows
+```
+
+
+---
+
+# Review: R Refresher
+
+- **Libraries** are your friend! `library()` (load) them or `install.packages()` them!
+- **Assign** stuff. Use `&lt;-` for assignments!
+- **Multiple objects** can and should exist in memory (if you lose track of the objects you're juggling with, check the environemnt panel at the upper right of RStudio)
+- **Data frames** are the most important type of object. Don't stop until you have your data in a data frame (check data type with `class()`)!
+- Bonus tip: use the help function `help(command_name)` if you can't remember a command's options.
+
+---
+
+# Organizing your Code
+
+Having a structured way to organize your R code is useful for reproducibility (and your future sanity!)
+
+There are two ways to improve your R code organization:
+
+1. Folder Structure
+2. RStudio Projects
+
+---
+
+# Organizing your Code: Folder Structure
+
+A useful way to organize your project folders:
+
+
+```bash
+
+project_name/       # name of your project
+|-- code/           # here go all the .R script files
+|-- data/           # here's your data
+|   |-- input/       # raw input data file (experimental results, existing datasets)
+    |-- output/      # transformed and cleaned datasets for analysis
+|-- manuscript/     # your manuscript, i.e. .docx or LaTeX files
+|-- figures/        # your figures as separate files 
+|-- output/         # tables
+
+```
+
+
+
+---
+
+# Organizing your Code: RStudio Projects
+
+An RStudio project takes care of several useful steps in your project. When you load an RStudio project, the following steps are taken:
+
+- Sets the working directory to the project directory
+- A new R session (process) is started (with no libraries)
+- Previously edited source documents are restored into editor tabs
+- Other RStudio settings (e.g. active tabs, splitter positions, etc.) are restored to where they were the last time the project was closed.
+- [...and others, see https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects]
+
+
+
+---
+
+# Organizing your Code: Setting up an RStudio Project {.columns-2}
+
+In RStudio, go to File =&gt; New Project =&gt; "Existing Directory" 
+
+&lt;div align = "center"&gt;
+&lt;img src=http://www.rstudio.com/images/docs/projects_new.png") width = 60%&gt;
+&lt;/div&gt;
+
+---
+
+# Reading Data
+
+To read `.csv` files, the the `read_csv()` function in the `readr` package is useful (automatically loaded through `library(tidyverse)`).
+
+To read Excel files, use the `read_excel()` function from the `readxl` package, which needs to be loaded separately.
+
+To read files from Stata or SPSS, use `read_dta()` or `read_spss()` from the `haven` package, which needs to be loaded separately. 
+
+Example:
+
+
+```r
+library(tidyverse)
+library(readxl)
+
+sipri &lt;- read_excel("./data/SIPRI-Milex-data-1949-2016_cleaned.xlsx", 
+                    sheet = 5, na = c("xxx", ". ."))
+```
+
+
+To read R files (`.rda` or `.rdata`), simply use `load("name_of_my_file.rda"`)
+
+Also useful: the `rio` package!
+
+---
+
+
+# Exercise
+
+1. Create organized folder structure
+2. Download the SIPRI data from the course website http://felixhaass/dataviz_GIGA/data.html 
+3. Create an R script to read the data (hint: remember that the Excel file has several sheets! How would you use the R help to get info on how to read only a specific excel sheet?)
+
+---
+
+# Solution
+
+
+
+
+```r
+library(tidyverse)
+library(readxl)
+```
+
+```
+## Warning: package 'readxl' was built under R version 3.4.3
+```
+
+```r
+sipri &lt;- read_excel("./data/SIPRI-Milex-data-1949-2016_cleaned.xlsx", 
+                    sheet = 5, na = c("xxx", ". ."))
+
+sipri_plot &lt;- sipri %&gt;%
+  # from wide to long format with the `gather function
+  gather(key = year, 
+         value = military_expenditure, 
+         -Country) %&gt;% 
+  ggplot(., aes(x = year, 
+                y = military_expenditure, 
+                group = Country)) + 
+  geom_line(alpha = 0.5)
+```
+
+---
+
+# Solution
+
+
+```r
+print(sipri_plot)
+```
+
+![](session1_intro_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightLanguage": "r",
+"highlightStyle": "monokai",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

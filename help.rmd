@@ -1,0 +1,27 @@
+---
+title: "Useful Resources"
+output: 
+  html_document
+# toc: true
+# toc_depth: 4
+# toc_float: 
+#   collapsed: false
+# code_download: true
+---
+  
+Here is a collection of external resources for the tidyverse/ggplot2 and principles of good data visualization. 
+
+# R, ggplot2, and the tidyverse
+
+- [https://www.tidyverse.org/learn/](https://www.tidyverse.org/learn/) has a collection of links on learning R and the tidyverse packages
+- David Robinson's [Introduction to the tidyverse](https://www.datacamp.com/courses/introduction-to-the-tidyverse) Data Camp online course
+- The book [R for Data Science](http://r4ds.had.co.nz/) (complete version online available), co-authored by Hadley Wickham, the inventor of many tidyverse principles and packages. 
+- [RStudio Cheat Sheets](https://www.rstudio.com/resources/cheatsheets/)
+
+# Data Visualization
+- Kieran Healy's book ["Data Visualization for the Social Sciences"](http://socviz.co/). Many of this course's exercises build on this excellent book. 
+
+# Help, my R code doesn't work!
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/r) is your friend. Usually, every problem you encounter someone else has already encountered and asked about on this site. 
+- [#rstats](https://twitter.com/search?q=rstats) Twitter hash tag. Often a resource for help and/or new package announcements; generally nice people are on the channel. 
+- [https://community.rstudio.com/](https://community.rstudio.com/). A new website, specifically designed for problems and questions regarding the tidyverse packages.

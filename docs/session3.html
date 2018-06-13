@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Session 3: Facets and small multiples</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making your research accessible</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="software.html">
+    <span class="fa fa-laptop"></span>
+     
+    Required Software and Installation Instructions
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="session1.html">Session 1: Intro, R Refresher, and Code Organization</a>
+    </li>
+    <li>
+      <a href="session2.html">Session 2: ggplot2</a>
+    </li>
+    <li>
+      <a href="session3.html">Session 3: Facets and small multiples</a>
+    </li>
+    <li>
+      <a href="session4.html">Session 4: Maps</a>
+    </li>
+    <li>
+      <a href="session5.html">Session 5: General Tips and Next Steps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sessions_day2.html">All sessions</a>
+    </li>
+    <li>
+      <a href="Visualizations_R_Palop_2018.pdf">Slides Session 1</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-list"></span>
+     
+    Data
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="help.html">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Session 3: Facets and small multiples</h1>
+
+</div>
+
+
+<div id="slides" class="section level1">
+<h1>Slides</h1>
+<ul>
+<li><a href="./slides/session3_facets.html">HTML</a></li>
+</ul>
+<hr />
+</div>
+<div id="facets" class="section level1">
+<h1>facets</h1>
+<p><code>faceted</code> plots (or small multiple plots) are a way to divide your data up by a categorical variable. Facets are “not a geom, but rather a way of organizing a series of geoms” (<a href="http://socviz.co/groupfacettx.html#facet-to-make-small-multiples">Kieran Healy</a>).</p>
+<p><img src="session3_files/figure-html/unnamed-chunk-2-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="facets-think-about-the-comparison" class="section level1">
+<h1>facets: think about the comparison!</h1>
+<p>GDP/pc development by <em>continent</em>.</p>
+<p>In ggplot, we use the <code>facet_wrap()</code> building block to specify the faceting variable(s).</p>
+<pre class="r"><code>p &lt;- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color=&quot;gray70&quot;, 
+            aes(group = country)) + # recall we need to map group to country
+  facet_wrap(~ continent, # &quot;~&quot; 
+             ncol = 5) # how many columns?</code></pre>
+<hr />
+</div>
+<div id="facets-think-about-the-comparison-1" class="section level1">
+<h1>facets: think about the comparison!</h1>
+<pre class="r"><code>print(p)</code></pre>
+<p><img src="session3_files/figure-html/unnamed-chunk-4-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="facets-all-elements" class="section level1">
+<h1>facets: all elements</h1>
+<pre class="r"><code>library(tidyverse)
+library(gapminder)
+
+p &lt;- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color=&quot;gray70&quot;, aes(group = country)) +
+  # add smoother
+  geom_smooth(size = 1.1, method = &quot;loess&quot;, se = FALSE) +
+  # log y axis (could&#39;ve also wrapped y=log(gdpPercap) in aes() above)
+  scale_y_log10(labels=scales::dollar) +
+  # facet command
+  facet_wrap(~ continent, ncol = 5) +
+  # labels and appearance tweaks
+  labs(x = &quot;Year&quot;,
+       y = &quot;GDP per capita&quot;,
+       title = &quot;GDP per capita on Five Continents&quot;) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 5))</code></pre>
+<hr />
+</div>
+<div id="facets-all-elements-1" class="section level1">
+<h1>facets: all elements</h1>
+<pre class="r"><code>print(p)</code></pre>
+<p><img src="session3_files/figure-html/unnamed-chunk-6-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="facets-more-applications" class="section level1">
+<h1>facets: more applications</h1>
+<p>Recall our example: relationship between GDP per capita and population in Asia.</p>
+<pre class="r"><code>gdp_pop_plot &lt;- ggplot(gapminder %&gt;% filter(continent == &quot;Asia&quot;), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_smooth(method = &quot;lm&quot;)
+
+print(gdp_pop_plot)</code></pre>
+<p><img src="session3_files/figure-html/unnamed-chunk-7-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+<p>class: inverse, center, middle</p>
+</div>
+<div id="really-a-negative-relationship" class="section level1">
+<h1>Really a negative relationship?</h1>
+<hr />
+</div>
+<div id="facets-more-applications-1" class="section level1">
+<h1>facets: more applications</h1>
+<p>Plot regression line by country (without facets)</p>
+<pre class="r"><code>gdp_pop_plot &lt;- ggplot(gapminder %&gt;% filter(continent == &quot;Asia&quot;), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(aes(color = country), 
+             alpha = 0.5, size = 2) +
+  geom_smooth(aes(fill = country, color = country),
+              method = &quot;lm&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<hr />
+</div>
+<div id="facets-more-applications-2" class="section level1">
+<h1>facets: more applications</h1>
+<p><img src="session3_files/figure-html/unnamed-chunk-9-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="facets-more-applications-3" class="section level1">
+<h1>facets: more applications</h1>
+<p>Prior plot useful for MoMA, but not for the data analyst. How to do better?</p>
+<p>facets!</p>
+<pre class="r"><code>gapminder_asia &lt;- gapminder %&gt;% 
+  filter(continent == &quot;Asia&quot;)
+
+gdp_pop_plot &lt;- ggplot(gapminder_asia, 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = &quot;lm&quot;, size = 0.7) + 
+  facet_wrap(~ country, scales = &quot;free&quot;) + # scales = &quot;free&quot; to vary axis limits +
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) </code></pre>
+<hr />
+</div>
+<div id="facets-more-applications-4" class="section level1">
+<h1>facets: more applications</h1>
+<p><img src="session3_files/figure-html/unnamed-chunk-11-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<hr />
+<p>class: inverse background-image: url(“Ninja-header.svg_opacity1.png”) background-size: contain</p>
+</div>
+<div id="useful-tips-from-the-dataviz-ninja" class="section level1">
+<h1>Useful tips from the dataviz ninja</h1>
+<ol style="list-style-type: decimal">
+<li><p>Think hard about <em>what</em> you want to visualize!</p></li>
+<li><p>Don’t use too many aesthetics - just use those that help you clarify your comparison!</p></li>
+<li><p>Trial and error is your friend!</p></li>
+<li><p><strong>Alphabet is the least useful ways to organize information.</strong></p></li>
+</ol>
+<hr />
+</div>
+<div id="facets-order-by-summary-statistic" class="section level1">
+<h1>facets: order by summary statistic</h1>
+<pre class="r"><code>library(forcats) # useful to reorder factors or ordered categorical variables
+
+gapminder_asia &lt;- gapminder %&gt;% 
+  filter(continent == &quot;Asia&quot;) %&gt;% 
+  # do all data manipulation by country
+  group_by(country) %&gt;% 
+  # extract beta coefficient from reg of GDP on pop 
+  mutate(beta = coef(lm(log(gdpPercap) ~ log(pop)))[2]) %&gt;%  
+  # remove country grouping 
+  ungroup() %&gt;% 
+  # sort &quot;country&quot; variable by beta
+  mutate(country_order = fct_reorder(country, beta))
+
+head(gapminder_asia, 5)</code></pre>
+<pre><code>## # A tibble: 5 x 8
+##   country     continent  year lifeExp      pop gdpPercap    beta country_~
+##   &lt;fctr&gt;      &lt;fctr&gt;    &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;fctr&gt;   
+## 1 Afghanistan Asia       1952    28.8  8425333       779 -0.0380 Afghanis~
+## 2 Afghanistan Asia       1957    30.3  9240934       821 -0.0380 Afghanis~
+## 3 Afghanistan Asia       1962    32.0 10267083       853 -0.0380 Afghanis~
+## 4 Afghanistan Asia       1967    34.0 11537966       836 -0.0380 Afghanis~
+## 5 Afghanistan Asia       1972    36.1 13079460       740 -0.0380 Afghanis~</code></pre>
+<hr />
+</div>
+<div id="facets-order-by-summary-statistic-1" class="section level1">
+<h1>facets: order by summary statistic</h1>
+<p><img src="session3_files/figure-html/unnamed-chunk-13-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="facets-exercise" class="section level1">
+<h1>facets: Exercise</h1>
+<p>Plot the relationship between <code>gdpPercap</code> and <code>lifeExp</code> in the Americas, faceted by <code>country</code>.</p>
+<p>Bonus: sort <code>country</code> by the direction + strength of the relationship between <code>gdpPercap</code> and <code>lifeExp</code></p>
+<p>What is surprising?</p>
+<hr />
+</div>
+<div id="facets-exercise-solution" class="section level1">
+<h1>facets: Exercise Solution</h1>
+<pre class="r"><code>gapminder_americas &lt;- gapminder %&gt;% 
+  filter(continent == &quot;Americas&quot;) %&gt;% 
+  group_by(country) %&gt;% 
+  mutate(beta = coef(lm(lifeExp ~ log(gdpPercap)))[2]) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(country_order = fct_reorder(country, beta))
+
+gdp_lifeexp_americas &lt;- ggplot(gapminder_americas, 
+                       aes(x = log(gdpPercap), 
+                           y = lifeExp)) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = &quot;lm&quot;, size = 0.7) + 
+  facet_wrap(~ country_order,  # facet by &quot;country_order&quot;!
+             scales = &quot;free&quot;) + # scales = &quot;free&quot; to vary axis limits + 
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) </code></pre>
+<hr />
+</div>
+<div id="facets-exercise-solution-1" class="section level1">
+<h1>facets: Exercise Solution</h1>
+<p><img src="session3_files/figure-html/unnamed-chunk-15-1.png" width="2100" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

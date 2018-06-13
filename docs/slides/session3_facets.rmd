@@ -1,0 +1,324 @@
+---
+title: "Making your research accessible: Data Visualization and Interactive Graphics"
+subtitle: "Session 3 - Facets and Small Multiples
+
+<html>
+  <div style='float:left'></div>
+  <hr color='#EB811B' size=1px width=796px>
+</html>"
+author: "Felix Haass"
+date: ""
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    nature: 
+      # highlightLanguage: r
+      highlightStyle: monokai
+      highlightLines: true
+    chakra: libs/remark-latest.min.js
+
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache = T,
+                      dev = "CairoPNG",
+                      # bitmapType = 'cairo',
+                      warning = FALSE, message = FALSE)
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+```
+
+# facets
+
+`faceted` plots (or small multiple plots) are a way to divide your data up by a categorical variable. Facets are "not a geom, but rather a way of organizing a series of geoms" ([Kieran Healy](http://socviz.co/groupfacettx.html#facet-to-make-small-multiples)).
+
+```{r, echo = F, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 3, fig.align = "center"}
+library(tidyverse)
+library(gapminder)
+
+p <- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color="gray70", aes(group = country)) +
+  geom_smooth(size = 1.1, method = "loess", se = FALSE) +
+  scale_y_log10(labels=scales::dollar) +
+  facet_wrap(~ continent, ncol = 5) +
+  labs(x = "Year",
+       y = "GDP per capita",
+       title = "GDP per capita on Five Continents") +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 5))
+
+print(p)
+
+```
+
+
+---
+
+# facets: think about the comparison!
+
+GDP/pc development by *continent*. 
+
+In ggplot, we use the `facet_wrap()` building block to specify the faceting variable(s). 
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 3, fig.align = "center"}
+
+p <- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color="gray70", 
+            aes(group = country)) + # recall we need to map group to country
+  facet_wrap(~ continent, # "~" 
+             ncol = 5) # how many columns?
+
+``` 
+
+
+---
+
+# facets: think about the comparison!
+```{r, echo = T,warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 3, fig.align = "center"}
+
+print(p)
+
+```
+
+---
+
+# facets: all elements
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 3, fig.align = "center"}
+library(tidyverse)
+library(gapminder)
+
+p <- ggplot(data = gapminder, 
+            mapping = aes(x = year, 
+                          y = gdpPercap)) + 
+  geom_line(color="gray70", aes(group = country)) +
+  # add smoother
+  geom_smooth(size = 1.1, method = "loess", se = FALSE) +
+  # log y axis (could've also wrapped y=log(gdpPercap) in aes() above)
+  scale_y_log10(labels=scales::dollar) +
+  # facet command
+  facet_wrap(~ continent, ncol = 5) +
+  # labels and appearance tweaks
+  labs(x = "Year",
+       y = "GDP per capita",
+       title = "GDP per capita on Five Continents") +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 5))
+
+```
+
+---
+
+# facets: all elements
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 3, fig.align = "center"}
+
+print(p)
+
+```
+
+---
+
+# facets: more applications
+
+Recall our example: relationship between GDP per capita and population in Asia. 
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 2.5, fig.align = "center"}
+
+gdp_pop_plot <- ggplot(gapminder %>% filter(continent == "Asia"), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_smooth(method = "lm")
+
+print(gdp_pop_plot)
+
+```
+
+---
+
+class: inverse, center, middle
+
+# Really a negative relationship?
+
+---
+
+# facets: more applications
+
+Plot regression line by country (without facets)
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 2.5, fig.align = "center"}
+
+gdp_pop_plot <- ggplot(gapminder %>% filter(continent == "Asia"), 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(aes(color = country), 
+             alpha = 0.5, size = 2) +
+  geom_smooth(aes(fill = country, color = country),
+              method = "lm") +
+  theme(legend.position = "none")
+
+``` 
+
+---
+
+# facets: more applications
+
+```{r, echo = F, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 4.75, fig.align = "center"}
+print(gdp_pop_plot) 
+```
+
+---
+
+# facets: more applications
+
+Prior plot useful for MoMA, but not for the data analyst. How to do better? 
+
+facets!
+
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 2.5, fig.align = "center"}
+
+gapminder_asia <- gapminder %>% 
+  filter(continent == "Asia")
+
+gdp_pop_plot <- ggplot(gapminder_asia, 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", size = 0.7) + 
+  facet_wrap(~ country, scales = "free") + # scales = "free" to vary axis limits +
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) 
+
+``` 
+
+---
+
+# facets: more applications
+
+
+```{r, echo = F, warning = F, eval = T, units = "in", dpi = 350, fig.width=7, fig.height = 4.5, fig.align = "center"}
+print(gdp_pop_plot)  
+``` 
+
+
+---
+
+
+class: inverse
+background-image: url("Ninja-header.svg_opacity1.png")
+background-size: contain
+
+# Useful tips from the dataviz ninja
+
+1. Think hard about *what* you want to visualize!
+
+2. Don't use too many aesthetics - just use those that help you clarify your comparison!
+
+3. Trial and error is your friend!
+
+4. **Alphabet is the least useful ways to organize information.**
+
+---
+
+# facets: order by summary statistic
+
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 350, fig.width=7, fig.height = 4.5, fig.align = "center"}
+
+library(forcats) # useful to reorder factors or ordered categorical variables
+
+gapminder_asia <- gapminder %>% 
+  filter(continent == "Asia") %>% 
+  # do all data manipulation by country
+  group_by(country) %>% 
+  # extract beta coefficient from reg of GDP on pop 
+  mutate(beta = coef(lm(log(gdpPercap) ~ log(pop)))[2]) %>%  
+  # remove country grouping 
+  ungroup() %>% 
+  # sort "country" variable by beta
+  mutate(country_order = fct_reorder(country, beta))
+
+head(gapminder_asia, 5)
+
+``` 
+
+---
+
+# facets: order by summary statistic
+
+```{r, echo = F, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 4.75, fig.align = "center"}
+
+gdp_pop_plot <- ggplot(gapminder_asia, 
+                       aes(x = log(pop), 
+                           y = log(gdpPercap))) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", size = 0.7) + 
+  facet_wrap(~ country_order,  # facet by "country_order"!
+             scales = "free") + # scales = "free" to vary axis limits + 
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) 
+
+plot(gdp_pop_plot)
+
+``` 
+
+
+
+---
+
+# facets: Exercise
+
+Plot the relationship between `gdpPercap` and `lifeExp` in the Americas, faceted by `country`.
+
+Bonus: sort `country` by the direction + strength of the relationship between `gdpPercap` and `lifeExp`
+
+What is surprising?
+
+
+
+---
+
+# facets: Exercise Solution
+
+```{r, echo = T, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 4.75, fig.align = "center"}
+
+gapminder_americas <- gapminder %>% 
+  filter(continent == "Americas") %>% 
+  group_by(country) %>% 
+  mutate(beta = coef(lm(lifeExp ~ log(gdpPercap)))[2]) %>% 
+  ungroup() %>% 
+  mutate(country_order = fct_reorder(country, beta))
+
+gdp_lifeexp_americas <- ggplot(gapminder_americas, 
+                       aes(x = log(gdpPercap), 
+                           y = lifeExp)) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", size = 0.7) + 
+  facet_wrap(~ country_order,  # facet by "country_order"!
+             scales = "free") + # scales = "free" to vary axis limits + 
+  theme_bw() +
+  theme(axis.text = element_text(size = 4), 
+        strip.text = element_text(size = 6)) 
+
+``` 
+
+---
+
+# facets: Exercise Solution
+
+```{r, echo = F, warning = F, eval = T, units = "in", dpi = 300, fig.width=7, fig.height = 4.75, fig.align = "center"}
+
+plot(gdp_lifeexp_americas)
+
+```
+

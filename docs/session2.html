@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Session 2: ggplot2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making your research accessible</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="software.html">
+    <span class="fa fa-laptop"></span>
+     
+    Required Software and Installation Instructions
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="session1.html">Session 1: Intro, R Refresher, and Code Organization</a>
+    </li>
+    <li>
+      <a href="session2.html">Session 2: ggplot2</a>
+    </li>
+    <li>
+      <a href="session3.html">Session 3: Facets and small multiples</a>
+    </li>
+    <li>
+      <a href="session4.html">Session 4: Maps</a>
+    </li>
+    <li>
+      <a href="session5.html">Session 5: General Tips and Next Steps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    Sessions Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sessions_day2.html">All sessions</a>
+    </li>
+    <li>
+      <a href="Visualizations_R_Palop_2018.pdf">Slides Session 1</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-list"></span>
+     
+    Data
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="help.html">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Session 2: ggplot2</h1>
+
+</div>
+
+
+<div id="slides" class="section level1">
+<h1>Slides</h1>
+<ul>
+<li><a href="./slides/session2_ggplot2.html">HTML</a></li>
+</ul>
+<hr />
+</div>
+<div id="ggplot2" class="section level1">
+<h1>ggplot2</h1>
+<p>The “gg” in <code>ggplot2</code> stands for the “Grammar of Graphics.” The grammar of graphics is a philosophy of data visualization which forces you to think about <em>what</em> you want to visualize <em>how</em>. <a href="http://hadley.nz/">Hadley Wickham</a> followed this philosophy to implement the <code>ggplot2</code> package.</p>
+<p><img src="session2_files/figure-html/unnamed-chunk-2-1.png" width="400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="the-anatomy-of-a-ggplot2-plot" class="section level1">
+<h1>The anatomy of a ggplot2 plot</h1>
+<p>The grammar of graphics specifies <strong>building blocks</strong> out of which an analyst builds a plot. These include, in the order of application:</p>
+<ol style="list-style-type: decimal">
+<li>Data (<em>what</em> do you want to plot?)</li>
+<li>Aesthetic mapping (what comes on the x and y axes? )</li>
+<li>Geometric object (<code>geoms</code>) (How do we want to see our data? Points, lines, bars, …)</li>
+<li>Add more <code>geoms</code> (e.g. add regression lines to a scatterplot)</li>
+<li>Polish labels, scales, legends, and appearance.</li>
+</ol>
+<p>(see <a href="http://socviz.co/makeplot.html#build-your-plots-layer-by-layers">this link</a> for more details)</p>
+<hr />
+<p>class: inverse background-image: url(“Ninja-header.svg_opacity1.png”) background-size: contain</p>
+</div>
+<div id="useful-tips-from-the-dataviz-ninja" class="section level1">
+<h1>Useful tips from the dataviz ninja</h1>
+<ol style="list-style-type: decimal">
+<li><strong>Think hard about <em>what</em> you want to visualize!</strong></li>
+</ol>
+<blockquote>
+<p>“Think of graphs as comparison” - <a href="http://andrewgelman.com/2014/03/25/statistical-graphics-course-statistical-graphics-advice/">Andrew Gelman</a></p>
+</blockquote>
+<hr />
+</div>
+<div id="ggplot2-building-blocks" class="section level1">
+<h1>ggplot2 building blocks</h1>
+<p>Let’s look at the ggplot2 building blocks in practice:</p>
+<pre class="r"><code>library(gapminder) # loads the gapminder data
+library(tidyverse) # loads ggplot2 and other packages
+
+example_plot &lt;- ggplot(data = gapminder, # specify which dataset to use
+                       aes(x = year, # what goes on the x axis?
+                           y = lifeExp )) + # what&#39;s on the y axis?
+  geom_point() # with which geometric object should the data be displayed?</code></pre>
+<p>Note the <code>+</code> that ties the building blocks together.</p>
+<hr />
+</div>
+<div id="ggplot2-building-blocks-1" class="section level1">
+<h1>ggplot2 building blocks</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-4-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="aesthetics---size" class="section level1">
+<h1>Aesthetics - Size</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       aes(x = year,  # the aes() function defines aesthetics
+                           y = lifeExp, 
+                           size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+  geom_point() 
+
+# print(example_plot)</code></pre>
+<hr />
+</div>
+<div id="aesthetics---size-1" class="section level1">
+<h1>Aesthetics - Size</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-6-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="aesthetics-ii---color" class="section level1">
+<h1>Aesthetics II - Color</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       # the aes() function defines aesthetics
+                       aes(x = year,  # x axis
+                           y = lifeExp, # y axis
+                           color = continent, # map color to continent
+                           size = gdpPercap)) + # map the aesthetic &#39;size&#39; to gdp/pc
+  geom_point() </code></pre>
+<hr />
+</div>
+<div id="aesthetics-ii---color-1" class="section level1">
+<h1>Aesthetics II - Color</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-8-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+<p>class: inverse background-image: url(“Ninja-header.svg_opacity1.png”) background-size: contain</p>
+</div>
+<div id="useful-tips-from-the-dataviz-ninja-1" class="section level1">
+<h1>Useful tips from the dataviz ninja</h1>
+<ol style="list-style-type: decimal">
+<li><p>Think hard about <em>what</em> you want to visualize!</p></li>
+<li><p><strong>Don’t use too many aesthetics - just use those that help you clarify your comparison!</strong> &gt; “When ggplot successfully makes a plot but the result looks insane, the reason is almost always that something has gone wrong in the mapping between the data and aesthetics for the geom being used” - <a href="http://socviz.co/groupfacettx.html#grouped-data-and-the-group-aesthetic">Kieran Healy</a></p></li>
+</ol>
+<hr />
+</div>
+<div id="geoms" class="section level1">
+<h1>geoms</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       aes(x = year, 
+                           y = lifeExp)) +
+  geom_line() # lines instead of points</code></pre>
+<hr />
+</div>
+<div id="geoms-1" class="section level1">
+<h1>geoms</h1>
+<p>Whoops! What happened here?</p>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-10-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="geoms-2" class="section level1">
+<h1>geoms</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       aes(x = year, 
+                           y = lifeExp, 
+                           group = country)) +  # tell ggplot2 which 
+                                                # observations belong together
+  geom_line() </code></pre>
+<hr />
+</div>
+<div id="geoms-3" class="section level1">
+<h1>geoms</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-12-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="combining-geoms" class="section level1">
+<h1>Combining geoms</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       aes(x = year, 
+                           y = lifeExp)) +  
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;) # add regression line</code></pre>
+<hr />
+</div>
+<div id="combining-geoms-1" class="section level1">
+<h1>Combining geoms</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-14-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="combining-geoms-ii" class="section level1">
+<h1>Combining geoms II</h1>
+<pre class="r"><code>library(gapminder) 
+library(tidyverse) 
+
+example_plot &lt;- ggplot(data = gapminder, 
+                       aes(x = year, 
+                           y = lifeExp)) +  
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;) +
+  geom_smooth(method = &quot;loess&quot;, 
+              color = &quot;firebrick&quot;) # fix smoother color</code></pre>
+<hr />
+</div>
+<div id="combining-geoms-ii-1" class="section level1">
+<h1>Combining geoms II</h1>
+<pre class="r"><code>print(example_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-16-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="short-exercise" class="section level1">
+<h1>Short exercise</h1>
+<p>In the prior example we fix the color, i.e. we map it to a fixed value (<code>firebrick</code> which is red). What happens if we use the <code>aes()</code>function within the the <code>geom_smooth()</code> geom to map <code>color</code> to a variable in the gapminder dataset, such as <code>continent</code>?</p>
+<p>Try out yourself!</p>
+<hr />
+</div>
+<div id="manipulate-and-preprocess-data" class="section level1">
+<h1>Manipulate and Preprocess Data</h1>
+<p>Suppose we want to compare GDP/capita between North and South America visually.</p>
+<p>We need to <em>filter</em> our data. Filtering helps to reduce complexity &amp; <strong>get at the comparison</strong> that we want. To do that, we use the <code>dplyr</code> package which is part of the <code>tidyverse</code>.</p>
+<p>To filter data, we use the <code>filter()</code> function which comes with the <code>dplyr</code> package.</p>
+<pre class="r"><code>library(tidyverse) # loads dplyr package, among others
+library(gapminder)
+
+gapminder_americas &lt;- gapminder %&gt;% # the %&gt;% `chains` together functions
+  filter(continent == &quot;Americas&quot;) # that&#39;s two &quot;=&quot; 
+
+head(gapminder_americas, 5)</code></pre>
+<pre><code>## # A tibble: 5 x 6
+##   country   continent  year lifeExp      pop gdpPercap
+##   &lt;fctr&gt;    &lt;fctr&gt;    &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Argentina Americas   1952    62.5 17876956      5911
+## 2 Argentina Americas   1957    64.4 19610538      6857
+## 3 Argentina Americas   1962    65.1 21283783      7133
+## 4 Argentina Americas   1967    65.6 22934225      8053
+## 5 Argentina Americas   1972    67.1 24779799      9443</code></pre>
+<hr />
+</div>
+<div id="manipulate-and-preprocess-data-1" class="section level1">
+<h1>Manipulate and Preprocess Data</h1>
+<p>Modify/add variables to existing data frame. We modify data with the <code>mutate()</code> function and chain them together using the pipe operator <code>%&gt;%</code>.</p>
+<pre class="r"><code>library(tidyverse) # loads dplyr package, among others
+library(gapminder)
+
+gapminder_americas &lt;- gapminder %&gt;% 
+  filter(continent == &quot;Americas&quot;) %&gt;% 
+  # create a character/categorical variable
+  # to distinguish between North/South America
+  mutate(north_america = ifelse(country == &quot;United States&quot; |
+                                  country == &quot;Canada&quot;, 
+                                &quot;north_america&quot;, 
+                                &quot;south_america&quot;))
+head(gapminder_americas,3)</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   country   continent  year lifeExp      pop gdpPercap north_america
+##   &lt;fctr&gt;    &lt;fctr&gt;    &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;        
+## 1 Argentina Americas   1952    62.5 17876956      5911 south_america
+## 2 Argentina Americas   1957    64.4 19610538      6857 south_america
+## 3 Argentina Americas   1962    65.1 21283783      7133 south_america</code></pre>
+<hr />
+</div>
+<div id="manipulate-and-preprocess-data-2" class="section level1">
+<h1>Manipulate and Preprocess Data</h1>
+<p>Use filtered and preprocessed data to highlight comparisons in ggplot:</p>
+<pre class="r"><code>ggplot(gapminder_americas, # only use data for Americas
+       aes(x = year, 
+           y = gdpPercap, 
+           color = north_america)) + # map &quot;north_america&quot; category to color
+  geom_point()</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-19-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="exercise" class="section level1">
+<h1>Exercise</h1>
+<p>Plot the development of population size (<code>pop</code> variable in the gapminder data) over time (<code>year</code> variable in the gapminder data) in Asia (hint: <code>continent == &quot;Asia&quot;</code>). Add a trend line and/or smooth line.</p>
+<p>Bonus exercise: Plot the relationship between population size <code>pop</code> and <code>gdpPercap</code>! (hint: might make sense to wrap <code>pop</code> and <code>gdpPercap</code> in <code>log()</code>).</p>
+<hr />
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<pre class="r"><code>library(tidyverse)
+library(gapminder)
+
+gapminder_asia &lt;- gapminder %&gt;% 
+  filter(continent == &quot;Asia&quot;) 
+
+asia_pop &lt;- ggplot(gapminder_asia, 
+                   aes(x = year, y = pop)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;)
+
+print(asia_pop)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-20-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="walkthrough-exercise" class="section level1">
+<h1>Walkthrough Exercise</h1>
+<p>Goal:</p>
+<p><img src="session2_files/figure-html/unnamed-chunk-21-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="what-do-we-want-to-visualize" class="section level1">
+<h1>What do we want to visualize?</h1>
+<p>Think about the data! What is the comparison?</p>
+<p>Genocide vs. non-genocide countries =&gt; Rwanda vs. rest of Africa</p>
+<pre class="r"><code>library(gapminder)
+library(tidyverse)
+
+gapminder_africa &lt;- gapminder %&gt;% 
+  # filter only African countries
+  filter(continent == &quot;Africa&quot;) %&gt;% 
+  # create a categorical variable that distinguishes
+  # between Rwanda and other African countries
+  mutate(color_plot = ifelse(country != &quot;Rwanda&quot;, # != = &quot;!&quot; + &quot;=&quot;
+                             &quot;Other African Countries&quot;, 
+                             &quot;Rwanda&quot;))</code></pre>
+<hr />
+</div>
+<div id="add-geom_line-map-coloralpha" class="section level1">
+<h1>Add geom_line() + map color/alpha</h1>
+<pre class="r"><code>rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, 
+                          y = lifeExp, 
+                          group = country, 
+                          color = color_plot)) + 
+  geom_line(aes(alpha = color_plot)) # map alpha to &quot;color_plot&quot; variable     
+                                     # ggplot chooses alpha level automatically
+  
+  
+
+print(rwanda_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-23-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="add-coloralpha-scales" class="section level1">
+<h1>Add color/alpha scales</h1>
+<pre class="r"><code>rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, 
+                          y = lifeExp, 
+                          group = country, 
+                          color = color_plot)) + 
+  geom_line(aes(alpha = color_plot)) + 
+  
+  # we assign colors/alpha values/other &quot;aes&quot; through &quot;scale&quot; functions
+  scale_alpha_discrete(&quot;&quot;, range = c(0.5, 1)) +  
+  scale_color_manual(&quot;&quot;, values = c(&quot;lightgrey&quot;, &quot;black&quot;)) 
+
+
+print(rwanda_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-24-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="manipulate-appearance-add-theme" class="section level1">
+<h1>Manipulate appearance: add theme</h1>
+<pre class="r"><code>rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, 
+                          y = lifeExp, 
+                          group = country, 
+                          color = color_plot)) + 
+  geom_line(aes(alpha = color_plot)) + 
+  scale_alpha_discrete(&quot;&quot;, range = c(0.5, 1)) +  
+  scale_color_manual(&quot;&quot;, values = c(&quot;lightgrey&quot;, &quot;black&quot;)) + 
+  
+  # add theme
+  theme_bw() + # black and white theme
+  theme(legend.position = &quot;bottom&quot;, # legend position
+        panel.grid = element_blank()) # remove grid lines</code></pre>
+<hr />
+</div>
+<div id="manipulate-appearance-add-theme-1" class="section level1">
+<h1>Manipulate appearance: add theme</h1>
+<pre class="r"><code>print(rwanda_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-26-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="manipulate-appearance-change-labels" class="section level1">
+<h1>Manipulate appearance: change labels</h1>
+<pre class="r"><code>rwanda_plot &lt;- ggplot(gapminder_africa, 
+                      aes(x = year, 
+                          y = lifeExp, 
+                          group = country, 
+                          color = color_plot)) + 
+  geom_line(aes(alpha = color_plot)) + 
+  scale_alpha_discrete(&quot;&quot;, range = c(0.5, 1)) +  
+  scale_color_manual(&quot;&quot;, values = c(&quot;lightgrey&quot;, &quot;black&quot;)) + 
+  theme_bw() + 
+  theme(legend.position = &quot;bottom&quot;, 
+        panel.grid = element_blank()) +
+  
+  # labels, captions, and title/subtitle
+  labs(x = &quot;&quot;, y = &quot;Life Expectancy in Years&quot;, 
+       title = &quot;The Impact of Genocide on Life Expectancy&quot;, 
+       subtitle = &quot;Life expectancy for newborns extrapolated from mortality rate in a given year.&quot;, 
+       caption = &quot; Data source: gapminder.org&quot;)</code></pre>
+<hr />
+</div>
+<div id="manipulate-appearance-change-labels-1" class="section level1">
+<h1>Manipulate appearance: change labels</h1>
+<pre class="r"><code>print(rwanda_plot)</code></pre>
+<p><img src="session2_files/figure-html/unnamed-chunk-28-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<hr />
+<p>class: inverse background-image: url(“Ninja-header.svg_opacity1.png”) background-size: contain</p>
+</div>
+<div id="useful-tips-from-the-dataviz-ninja-2" class="section level1">
+<h1>Useful tips from the dataviz ninja</h1>
+<ol style="list-style-type: decimal">
+<li><p>Think hard about <em>what</em> you want to visualize!</p></li>
+<li><p>Don’t use too many aesthetics - just use those that help you clarify your comparison!</p></li>
+<li><p><strong>Trial and error is your friend!</strong><br />
+&gt; “If you are unsure of what each piece of code does, take advantage of ggplot’s additive character. Working backwards from the bottom up, remove each + some_function(…) statement one at a time to see how the plot changes.” - <a href="http://socviz.co/groupfacettx.html#facet-to-make-small-multiples">Kieran Healy</a></p></li>
+</ol>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

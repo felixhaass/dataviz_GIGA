@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Making your research accessible: Data Visualization and Interactive Graphics</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Felix Haass" />
+    <link href="session4_maps_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="session4_maps_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="session4_maps_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="session4_maps_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Making your research accessible: Data Visualization and Interactive Graphics
+## Session 4 - Maps
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=796px>
+</html>
+### Felix Haass
+### 15 Januar 2018
+
+---
+
+
+
+
+
+# Maps
+
+- Useful to visualize **spatial** data
+- Again, think of comparisons, but in space!
+- Goal of this session:
+  - Find maps online
+  - Combine spatial data with other information (GDP etc.)
+  - Plot maps with ggplot2
+  
+
+*Note:* Complex topic, very brief overview only, if you would like to know more, let me know and we organize a separate course!
+
+
+---
+
+# Example
+
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-1-1.png" width="110%" height="110%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Where to get maps and spatial data?
+
+- Each map comes in a specific spatial format, the so-called "shapefile"
+- Country shapefiles and subnational data can be obtained at http://gadm.org 
+  - Useful for single country shapes
+  - Lower-level administrative units
+  - Read the downloaded file with `country_map &lt;- readRDS("path_to_file")`
+  
+Many other sources of spatial data
+
+- Conflict data
+  - Uppsala Conflict Data Program GED http://ucdp.uu.se/downloads/
+
+Generate your own!
+
+- Measure location of interviews with a GPS device
+
+---
+
+# Read spatial data in R
+
+Note: you can find the world shapefile on the course website!
+
+
+```r
+library(maptools)
+
+world &lt;- readShapeSpatial("./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+plot(world)
+```
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-2-1.png" width="110%" height="110%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Manipulate and view spatial data
+
+The `world` object from the previous slide is a special kind of data frame, a `SpatialDataFrame`. It works like most other data frames, but has a few quirks.
+
+**Manipulating SpatialDataFrames**: `countrycode()`
+
+
+```r
+library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               "iso3c", # input format
+                               "continent") # output format
+
+table(world$continent)
+```
+
+```
+## 
+##   Africa Americas     Asia   Europe  Oceania 
+##       57       53       50       51       25
+```
+
+---
+
+# Manipulate and view spatial data
+
+**Manipulating SpatialDataFrames**: `subset()`
+
+
+```r
+library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               "iso3c", # input format
+                               "continent") # output format
+
+africa &lt;- subset(world, continent == "Africa")
+
+par(mar=c(0.1, 0.1, 0.1, 0.1))
+plot(africa)
+```
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-4-1.png" width="150" height="150" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Manipulate and view spatial data
+
+**Manipulating SpatialDataFrames**: `View()`
+
+
+```r
+library(countrycode)
+library(maptools)
+
+world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+world$continent &lt;- countrycode(world$ISO3, 
+                               "iso3c", # input format
+                               "continent") # output format
+
+
+View(world@data) # note the '@' as compared to other data frames
+```
+
+
+---
+
+# Merge in other data  I
+  
+
+```r
+library(countrycode)
+library(maptools)
+library(ggplot2)
+library(tidyverse)
+library(gapminder)
+
+world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+# create continent identifier
+world$continent &lt;- countrycode(world$ISO3, 
+                               "iso3c", # input format
+                               "continent") # output format
+
+# subset Africa shape file
+africa &lt;- subset(world, continent == "Africa")
+```
+
+
+---
+
+# Merge in other data II
+
+...continued from previous slide. 
+
+
+```r
+# get gapminder data 
+data("gapminder")
+
+# create country identifier for merging
+gapminder$ISO3 &lt;- countrycode(gapminder$country, "country.name", "iso3c")
+
+# only year 2007
+gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
+
+# fortify: bring dataset into shape that ggplot can understand
+africa_fort &lt;- fortify(africa, # we use the "africa" shapefile from previous slide
+                       region = "ISO3") # this becomes "id" in the fortified dataset
+
+# join in gapminder data
+africa_fort &lt;- left_join(africa_fort, 
+                         gapminder2007, 
+                         by = c("id" = "ISO3"))
+```
+
+---
+
+# Plot the map!
+
+
+```r
+africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, group = group),
+            color = "black") 
+
+plot(africa_map)
+```
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-8-1.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Plot the map! (continued)
+
+
+
+```r
+africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, group = group),
+            color = "black")  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) 
+
+plot(africa_map)
+```
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-9-1.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Plot the map! (continued)
+
+
+
+```r
+africa_map &lt;- ggplot() +
+  geom_path(data = africa_fort,
+            aes(x = long, y = lat, 
+                group = group),
+            color = "black")  +
+  geom_map(data = africa_fort,
+           aes(map_id = id,
+               fill = lifeExp),
+           map = africa_fort) +
+  
+  # appearance
+  labs(title = "Life Expectancy in Africa, 2007\n", 
+       subtitle = "Data: Gapminder\n") +
+  scale_fill_distiller("Life Expectancy", 
+                       palette = "RdYlGn", 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), 
+        legend.position = "bottom",
+        legend.text.align = 0) 
+```
+
+---
+
+# Plot the map! (continued)
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-11-1.png" width="85%" height="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Exercise
+
+Build a map of
+
+- Latin America (hint: countrycode has only "Americas" as continent. How would you filter the world shapefile to leave out the US and Canada?)
+
+- Merge in information on GDP per capita in 2007
+
+- Plot the map
+
+- For the fast ones: 
+  - Read up on the World Development Indicators R package `install.packages(WDI)`. 
+  - Use the package to download data on the indicator `DT.ODA.ODAT.GN.ZS` (net development assistance received as percent of GNI) in the year 2015 and download it in a separate data frame
+  - Merge the data frame into the `africa ` shapefile and generate a map of Aid/GNI for africa
+
+
+---
+
+# Solution
+
+
+```r
+library(maptools)
+library(sp)
+library(countrycode)
+library(gapminder)
+library(tidyverse)
+
+world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
+
+world$continent &lt;- countrycode(world$ISO2, "iso2c", "continent")
+
+latam &lt;- subset(world, continent == "Americas")
+
+# remove US and Canada and Greenland
+latam &lt;- subset(latam, NAME != "United States" &amp; 
+                  NAME != "Canada" &amp; 
+                  NAME != "Greenland")
+
+# get gapminder data 
+data("gapminder")
+
+gapminder$ISO3 &lt;- countrycode(gapminder$country, "country.name", "iso3c")
+
+gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
+```
+
+---
+
+# Solution II
+
+
+```r
+# Prepare and Merge Data
+
+latam_fort &lt;- fortify(latam, region = "ISO3")
+latam_fort &lt;- left_join(latam_fort, 
+                         gapminder2007,
+                         by = c("id" = "ISO3"))
+# plot
+latam_map &lt;- ggplot() +
+  geom_map(data = latam_fort, 
+           aes(map_id = id, fill = gdpPercap), 
+           map = latam_fort) + 
+  geom_path(data = latam_fort, 
+            aes(x = long, y = lat, group = group), 
+            color = "black") + 
+  labs(title = "GDP per capita in Latin America 2007\n", 
+       subtitle = "Data: Gapminder\n") +
+  scale_fill_distiller("GDP per capita", 
+                       palette = "RdYlGn", 
+                       direction = 1) +
+  coord_equal() +
+  theme_void() +  
+  theme(panel.grid = element_blank(), legend.position = "bottom",
+        legend.text.align = 0) 
+```
+
+
+
+
+---
+
+# Solution III
+
+&lt;img src="session4_maps_files/figure-html/unnamed-chunk-14-1.png" width="60%" height="60%" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
