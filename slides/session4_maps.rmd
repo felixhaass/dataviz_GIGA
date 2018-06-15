@@ -60,7 +60,7 @@ library(rgeos)
 library(maptools)
 library(sp)
 library(countrycode)
-library(WDI)
+library(broom)
 library(gapminder)
 library(tidyverse)
 
@@ -84,14 +84,14 @@ gapminder2007 <- gapminder[gapminder$year == 2007, ]
 
 # Prepare and Merge Data
 
-africa_fort <- fortify(africa, region = "ISO3")
+africa_fort <- tidy(africa, region = "ISO3")
 africa_fort <- left_join(africa_fort, 
                          gapminder1962, 
                          by = c("id" = "ISO3"))
 
 africa_fort$year <- 1962
 
-africa_fort2007 <- fortify(africa, region = "ISO3")
+africa_fort2007 <- tidy(africa, region = "ISO3")
 africa_fort2007 <- left_join(africa_fort2007, 
                          gapminder2007, 
                          by = c("id" = "ISO3"))
@@ -246,6 +246,7 @@ library(maptools)
 library(ggplot2)
 library(tidyverse)
 library(gapminder)
+library(broom)
 
 world <- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
 
@@ -280,7 +281,7 @@ gapminder$ISO3 <- countrycode(gapminder$country, "country.name", "iso3c")
 gapminder2007 <- gapminder[gapminder$year == 2007, ]
 
 # fortify: bring dataset into shape that ggplot can understand
-africa_fort <- fortify(africa, # we use the "africa" shapefile from previous slide
+africa_fort <- tidy(africa, # we use the "africa" shapefile from previous slide
                        region = "ISO3") # this becomes "id" in the fortified dataset
 
 # join in gapminder data
@@ -396,6 +397,7 @@ library(sp)
 library(countrycode)
 library(gapminder)
 library(tidyverse)
+library(broom)
 
 world <- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
 
@@ -424,7 +426,7 @@ gapminder2007 <- gapminder[gapminder$year == 2007, ]
 ```{r, eval = T, echo = T}
 # Prepare and Merge Data
 
-latam_fort <- fortify(latam, region = "ISO3")
+latam_fort <- tidy(latam, region = "ISO3")
 latam_fort <- left_join(latam_fort, 
                          gapminder2007,
                          by = c("id" = "ISO3"))

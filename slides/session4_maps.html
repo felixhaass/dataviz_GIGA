@@ -22,7 +22,6 @@ class: center, middle, inverse, title-slide
 <hr color='#EB811B' size=1px width=796px>
 </html>
 ### Felix Haass
-### 15 Januar 2018
 
 ---
 
@@ -172,6 +171,7 @@ library(maptools)
 library(ggplot2)
 library(tidyverse)
 library(gapminder)
+library(broom)
 
 world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
 
@@ -203,7 +203,7 @@ gapminder$ISO3 &lt;- countrycode(gapminder$country, "country.name", "iso3c")
 gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
 
 # fortify: bring dataset into shape that ggplot can understand
-africa_fort &lt;- fortify(africa, # we use the "africa" shapefile from previous slide
+africa_fort &lt;- tidy(africa, # we use the "africa" shapefile from previous slide
                        region = "ISO3") # this becomes "id" in the fortified dataset
 
 # join in gapminder data
@@ -314,6 +314,7 @@ library(sp)
 library(countrycode)
 library(gapminder)
 library(tidyverse)
+library(broom)
 
 world &lt;- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
 
@@ -342,7 +343,7 @@ gapminder2007 &lt;- gapminder[gapminder$year == 2007, ]
 ```r
 # Prepare and Merge Data
 
-latam_fort &lt;- fortify(latam, region = "ISO3")
+latam_fort &lt;- tidy(latam, region = "ISO3")
 latam_fort &lt;- left_join(latam_fort, 
                          gapminder2007,
                          by = c("id" = "ISO3"))

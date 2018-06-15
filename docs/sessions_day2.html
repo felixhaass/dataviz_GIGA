@@ -367,7 +367,7 @@ div.tocify {
 <div id="about-me" class="section level3">
 <h3>About me</h3>
 <p><strong>Pau Palop-Garcia</strong><br />
-<em>GIGA Hamburg and Freie UniversitÃ¤t zu Berlin</em></p>
+<em>GIGA Hamburg and Freie Universität zu Berlin</em></p>
 <p><a href="mailto:pau.palop@giga-hamburg.de">pau.palop@giga-hamburg.de</a></p>
 <p><strong>Research interests:</strong> migration, political transnationalism, representation</p>
 </div>
@@ -608,7 +608,7 @@ ui &lt;- fluidPage(
 
 server &lt;- function(input, output) {
   output$gpoint &lt;- renderPlot({
-    ggplot(data = subset(gapminder, continent == input$continent, select = c(country:gdpPercap)), 
+    ggplot(data = subset(gapminder, continent %in% input$continent, select = c(country:gdpPercap)), 
            # the aes() function defines aesthetics
            aes(x = year,  # x axis
                y = lifeExp, # y axis
@@ -641,7 +641,7 @@ ui &lt;- fluidPage(
 
 server &lt;- function(input, output) {
   output$gpoint &lt;- renderPlot({
-    ggplot(data = subset(gapminder, continent == input$continent &amp; 
+    ggplot(data = subset(gapminder, continent %in% input$continent &amp; 
                            gdpPercap &lt; input$slider , select = c(country:gdpPercap)), 
            # the aes() function defines aesthetics
            aes(x = year,  # x axis
@@ -680,7 +680,7 @@ ui &lt;- pageWithSidebar(
 
 server &lt;- function(input, output) {
   output$gpoint &lt;- renderPlot({
-    ggplot(data = subset(gapminder, continent == input$continent &amp; 
+    ggplot(data = subset(gapminder, continent %in% input$continent &amp; 
                            gdpPercap &lt; input$slider , select = c(country:gdpPercap)), 
            # the aes() function defines aesthetics
            aes(x = year,  # x axis
@@ -852,7 +852,7 @@ ui &lt;- fluidPage(
 
 server &lt;- function(input, output) {
   output$gmap &lt;- renderPlot({
-    world &lt;- readShapeSpatial(&quot;C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+    world &lt;- readShapeSpatial(&quot;./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
     
     world$continent &lt;- countrycode(world$ISO3, 
                                    &quot;iso3c&quot;, # input format
@@ -947,7 +947,7 @@ shinyApp(ui = ui, server = server, options = list(height = 700))</code></pre>
 
 server &lt;- function(input, output) {
   output$gmap &lt;- renderPlot({
-    world &lt;- readShapeSpatial(&quot;C:/Users/palop/Dropbox/GIGA/Courses/Shiny_R_DP_2018/App_examples/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
+    world &lt;- readShapeSpatial(&quot;./data/shapefiles/TM_WORLD_BORDERS_SIMPL-0.3.shp&quot;)
     
     world$continent &lt;- countrycode(world$ISO3, 
                                    &quot;iso3c&quot;, # input format
