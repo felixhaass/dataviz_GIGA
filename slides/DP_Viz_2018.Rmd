@@ -1,6 +1,6 @@
 ---
 title: 'Making your research accessible: Data Visualization and Interactive Graphics'
-author: "Palop and Haaß"
+author: "Palop and Haass"
 date: "15 Juni 2018"
 output: html_document
 ---
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### About me
 **Pau Palop-Garcia**  
-*GIGA Hamburg and Freie Universität zu Berlin*
+*GIGA Hamburg and Freie UniversitÃ¤t zu Berlin*
 
 pau.palop@giga-hamburg.de  
 
