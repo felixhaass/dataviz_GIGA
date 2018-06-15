@@ -380,10 +380,6 @@ Build a map of
 
 - Plot the map
 
-- For the fast ones: 
-  - Read up on the World Development Indicators R package `install.packages(WDI)`. 
-  - Use the package to download data on the indicator `DT.ODA.ODAT.GN.ZS` (net development assistance received as percent of GNI) in the year 2015 and download it in a separate data frame
-  - Merge the data frame into the `africa ` shapefile and generate a map of Aid/GNI for africa
 
 
 ---
