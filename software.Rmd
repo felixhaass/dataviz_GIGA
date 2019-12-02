@@ -40,9 +40,11 @@ install.packages("haven") # for reading SPSS and Stata files
 install.packages("gapminder") # example data sets
 
 # For maps
-library(maptools)
-library(sp)
-library(countrycode)
+install.packages("maptools")
+install.packages("sp")
+install.packages("countrycode")
+install.packages("rgdal")
+install.packages("rgeos")
 
 # for shiny (second day)
 install.packages("shiny")

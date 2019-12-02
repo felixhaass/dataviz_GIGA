@@ -243,10 +243,10 @@ View(world@data) # note the '@' as compared to other data frames
 ```{r, echo = T, eval = T, warning = F, message=F}
 library(countrycode)
 library(maptools)
-library(ggplot2)
 library(tidyverse)
 library(gapminder)
 library(broom)
+library(rgeos)
 
 world <- readShapeSpatial("./data/shapefiles//TM_WORLD_BORDERS_SIMPL-0.3.shp")
 
